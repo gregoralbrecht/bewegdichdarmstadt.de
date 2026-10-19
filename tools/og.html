@@ -1,0 +1,16 @@
+<!doctype html>
+<!-- Renders a link-preview image with the share studio's renderer (design D8).
+     Used by tools/og.sh via headless Chrome: serve the repo root, open with ?look=&slogan=&tagline= -->
+<html lang="de"><head><meta charset="utf-8">
+<link rel="stylesheet" href="/site/assets/css/site.css">
+<style>html,body{margin:0;background:#000;overflow:hidden} canvas{display:block;width:1200px;height:630px}</style>
+</head><body>
+<canvas id="c"></canvas>
+<script type="module">
+  import { renderCard } from "/site/assets/js/share.js";
+  const p = new URLSearchParams(location.search);
+  await renderCard(document.getElementById("c"), { event: null, format: "og", lookKey: p.get("look") || "indigo", slogan: p.get("slogan"), tagline: p.get("tagline") || "" });
+  document.querySelectorAll("dialog").forEach((d) => d.remove());
+  document.title = "ready";
+</script>
+</body></html>
