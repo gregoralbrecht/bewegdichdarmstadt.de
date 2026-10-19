@@ -22,7 +22,7 @@ END:STANDARD
 END:VTIMEZONE
 BEGIN:VEVENT
 UID:runrave-2026-10-30@bewegdichdarmstadt.de
-DTSTAMP:20261019T160756Z
+DTSTAMP:20261019T164102Z
 DTSTART;TZID=Europe/Berlin:20261030T173000
 DTEND;TZID=Europe/Berlin:20261030T190000
 SUMMARY:Run & Rave · Beweg dich\, Darmstadt
@@ -30,7 +30,7 @@ LOCATION:Friedensplatz\, Darmstadt
 GEO:49.87338;8.65377
 DESCRIPTION:Gemeinsam ca. 5,5 km durch Darmstadt – mit Musik\, im entspan
  nten Tempo (ca. 7:30 min/km). Laufen\, biken oder tanzen. Kostenlos. Komm\
- , wie du bist.\n\nhttps://example.invalid/run-and-rave/
-URL:https://example.invalid/run-and-rave/
+ , wie du bist.\n\nhttps://bdd-entwurf-k7q3.pages.dev/run-and-rave/
+URL:https://bdd-entwurf-k7q3.pages.dev/run-and-rave/
 END:VEVENT
 END:VCALENDAR

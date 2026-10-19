@@ -22,14 +22,14 @@ END:STANDARD
 END:VTIMEZONE
 BEGIN:VEVENT
 UID:festival-2027-09-11@bewegdichdarmstadt.de
-DTSTAMP:20261019T160756Z
+DTSTAMP:20261019T164102Z
 DTSTART;TZID=Europe/Berlin:20270911T140000
 DTEND;TZID=Europe/Berlin:20270911T180000
 SUMMARY:Beweg dich\, Darmstadt Festival 2027
 LOCATION:Menschenskinder\, Darmstadt-Kranichstein
 DESCRIPTION:Yoga\, Training\, Bewegungsangebote\, Food\, Drinks und gute St
  immung – für große und kleine Menschen. Kostenlos\, Spenden willkommen
- .\n\nhttps://example.invalid/festival-2027/
-URL:https://example.invalid/festival-2027/
+ .\n\nhttps://bdd-entwurf-k7q3.pages.dev/festival-2027/
+URL:https://bdd-entwurf-k7q3.pages.dev/festival-2027/
 END:VEVENT
 END:VCALENDAR
