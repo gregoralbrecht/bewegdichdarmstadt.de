@@ -1,0 +1,9 @@
+{
+  "name": "bdd-entwurf-k7q3",
+  "private": true,
+  "type": "module",
+  "devDependencies": {
+    "cf": "^1.0.0-beta.18",
+    "wrangler": "^4.151.2"
+  }
+}

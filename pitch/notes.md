@@ -1,5 +1,7 @@
 # Pitch notes: Beweg dich, Darmstadt
 
+**Live concept:** https://bdd-entwurf-k7q3.round-breeze-7885.workers.dev (unlisted, noindex)
+
 ## Before / after (Lighthouse 12, mobile, 19 Oct 2026)
 
 | | Jimdo: Home | Jimdo: Aktuelles | New: Hub | New: Run & Rave | New: Festival |
@@ -17,6 +19,17 @@
 
 SEO on the new site shows 60 only because the concept is deliberately set to `noindex`.
 
+**Live on Cloudflare (19 Oct 2026, warm cache):**
+
+| | Hub | Run & Rave | Festival |
+|---|---|---|---|
+| Performance | 97–100 | 98 | 100 |
+| Accessibility / Best practices | 100 / 100 | 100 / 100 | 100 / 100 |
+| Largest contentful paint | 1.3–2.0 s | 1.4 s | 1.4 s |
+| Page weight (Brotli) | 91 KiB | 90 KiB | 88 KiB |
+
+The very first request after a deploy (cold cache) scored 94 on the hub.
+
 **Caveats, so nobody gets surprised:**
 - The new site was measured on a local server, without compression and **without the real photos yet**. Once the photos are in, the hub hero will add roughly 60–150 KB (AVIF), so expect performance in the mid-90s rather than 98.
 - A real host with compression will shrink the HTML/CSS/JS part to about 33 KB (measured gzip). Fonts are 48 KB.
@@ -33,7 +46,7 @@ SEO on the new site shows 60 only because the concept is deliberately set to `no
 - Small typos: "Hinte Beweg dich…", "letzte Runde. für 2026", "ein Zeichen setzten".
 - No alt text on any image. A cookie banner is needed because of Jimdo's third parties.
 
-## Demo links (replace `HOST` with the deployed URL)
+## Demo links (`HOST` = https://bdd-entwurf-k7q3.round-breeze-7885.workers.dev)
 
 The `?jetzt=` parameter makes the site behave as if it were that moment in Darmstadt. It's for demos only.
 
@@ -65,8 +78,9 @@ The `?jetzt=` parameter makes the site behave as if it were that moment in Darms
 4. Run & Rave dates for 2027, and the festival programme details.
 5. Original photos in full resolution (the Jimdo copies are capped at about 1500 px).
 
-## Before deploying
+## Deploying updates
 
-- Replace `https://example.invalid` in the OG meta tags, then run `node tools/make-ics.mjs https://HOST` and `sh tools/og.sh`.
-- Bump `VERSION` in `site/sw.js`.
+- `cf auth login` (once per session; the OAuth token expires after about an hour), then `sh deploy/deploy.sh`.
+- Bump `VERSION` in `site/sw.js` on every update, so returning visitors drop the old cache.
+- Calendar files: after changing dates, run `node tools/make-ics.mjs https://bdd-entwurf-k7q3.round-breeze-7885.workers.dev`.
 - Keep it unlisted. The pages are `noindex` and carry the "Entwurf" bar.

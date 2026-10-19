@@ -22,7 +22,7 @@ END:STANDARD
 END:VTIMEZONE
 BEGIN:VEVENT
 UID:runclub-recurring@bewegdichdarmstadt.de
-DTSTAMP:20261019T164102Z
+DTSTAMP:20261019T164250Z
 DTSTART;TZID=Europe/Berlin:20261113T173000
 DTEND;TZID=Europe/Berlin:20261113T183000
 RRULE:FREQ=MONTHLY;BYDAY=2FR
@@ -31,7 +31,7 @@ LOCATION:Friedensplatz\, Darmstadt
 GEO:49.87338;8.65377
 DESCRIPTION:Run Club von Beweg dich\, Darmstadt: Warm-up\, lockere Runde (c
  a. 5–7 km)\, verschiedene Tempos – niemand läuft allein. Kostenlos.\n
- \nhttps://bdd-entwurf-k7q3.pages.dev/#run-club
-URL:https://bdd-entwurf-k7q3.pages.dev/#run-club
+ \nhttps://bdd-entwurf-k7q3.round-breeze-7885.workers.dev/#run-club
+URL:https://bdd-entwurf-k7q3.round-breeze-7885.workers.dev/#run-club
 END:VEVENT
 END:VCALENDAR
