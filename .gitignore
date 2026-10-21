@@ -1,5 +1,5 @@
 .DS_Store
 node_modules/
-deploy/public/
-deploy/node_modules/
-deploy/.cloudflare/
+pitch/deploy/public/
+pitch/deploy/node_modules/
+pitch/deploy/.cloudflare/

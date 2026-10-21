@@ -80,7 +80,7 @@ The `?jetzt=` parameter makes the site behave as if it were that moment in Darms
 
 ## Deploying updates
 
-- `cf auth login` (once per session; the OAuth token expires after about an hour), then `sh deploy/deploy.sh`.
-- Bump `VERSION` in `site/sw.js` on every update, so returning visitors drop the old cache.
-- Calendar files: after changing dates, run `node tools/make-ics.mjs https://bdd-entwurf-k7q3.round-breeze-7885.workers.dev`.
+- `cf auth login` (once per session; the OAuth token expires after about an hour), then `sh pitch/deploy/deploy.sh`.
+- Bump `VERSION` in `pitch/site/sw.js` on every update, so returning visitors drop the old cache.
+- Calendar files: after changing dates, run `node pitch/tools/make-ics.mjs https://bdd-entwurf-k7q3.round-breeze-7885.workers.dev`.
 - Keep it unlisted. The pages are `noindex` and carry the "Entwurf" bar.
