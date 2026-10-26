@@ -18,6 +18,21 @@ schema: spec-driven
 #       - Always state what is out of scope
 #     tasks:
 #       - Break tasks into chunks of max 2 hours
+rules:
+  proposal:
+    - Fit on one screen (about 300 words max). The reader is one person with no reviewer; shorter gets read.
+    - Cover only why, what changes, and what is out of scope.
+    - State decisions inline as one-liners in the form "X over Y, because Z".
+    - "Tooling, config and docs-only changes set `skip_specs: true` in `.openspec.yaml`."
+  design:
+    - Write design.md only for a real tradeoff that does not fit as a one-liner in the proposal; otherwise skip it.
+    - When written, keep it under one screen and drop any template section that would be filler.
+  specs:
+    - Only for user-visible behavior that must survive later changes. Test - should an agent changing nearby code in six months be forced to keep this?
+    - One requirement per behavior, usually one scenario, no explanatory prose.
+  tasks:
+    - Small, checkable tasks, each with its verification inline.
+    - End with a `## Log` section, left empty when planning and filled during apply with deviations, gotchas and follow-ups (one bullet each).
 
 # Per-operation guidance (optional)
 # Add advisory guidance for how apply and archive work should be conducted.
