@@ -1,6 +1,7 @@
 # site-layout Specification
 
 ## Purpose
+
 The shared page shell every page uses: what the footer always offers and where it sits.
 
 ## Requirements
