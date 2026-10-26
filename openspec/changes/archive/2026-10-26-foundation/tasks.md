@@ -24,7 +24,7 @@
 
 - [x] 5.1 Add root scripts `format:check`, `lint`, `check`, `test`, `build` that run across the workspace; verify each runs from the repo root
 - [x] 5.2 Add `.github/workflows/ci.yml` (push and PR; pnpm, Node from `.nvmrc`, cache; frozen install, then format check, lint, check, test, build; cancel superseded runs); verify the whole sequence passes locally from a clean `pnpm install --frozen-lockfile`
-- [ ] 5.3 After the user confirms the push, push to main and verify the CI run is green on GitHub
+- [x] 5.3 After the user confirms the push, push to main and verify the CI run is green on GitHub
 
 ## Log
 
