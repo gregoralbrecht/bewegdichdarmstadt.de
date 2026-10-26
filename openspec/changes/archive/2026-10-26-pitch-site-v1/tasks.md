@@ -1,5 +1,7 @@
 # Tasks
 
+> Closed 2026-10-26: the pitch was approved and frozen in `pitch/` on 2026-10-21. Unchecked tasks were dropped, not done.
+
 Order follows the pitch goals: information within reach → spreading the word → playful. Groups 9 and 10 can slip if the 28 Oct deadline gets tight.
 
 ## 1. Scaffold and content capture
