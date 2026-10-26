@@ -36,6 +36,7 @@
 - Button press states scaled to `--shadow-sm`: hover lifts 2px with a 6px shadow, active sinks 4px to no shadow. Pill radius and 48px / 40px min heights as in the pitch.
 - Heading `size` is `"0"`–`"4"`; `--step--1` is left out because the styleguide reserves it for short labels. Default sizes: h1→4, h2→3, h3→2, h4→1, h5/h6→0. Margin is 0; spacing belongs to the layout.
 - `tsconfig.json` now includes `.storybook/` (Astro's `**/*` skips dot folders) and excludes `storybook-static/`, which `tsc` was picking up.
+- First CI run failed `pnpm check`: the CSS imports in `.tsx` get their types from the gitignored `.astro/types.d.ts`, which only existed locally. `check` now runs `astro sync` before `tsc`.
 - CI installs only the Chromium headless shell (`--only-shell`), which is what headless Vitest launches.
 - Verified: contrast violation story fails with `color-contrast`; Heading size mutation fails the play test; `document.fonts` shows Bricolage loaded on the Heading story, Figtree on the Button story, `lang="de"`, cream body background.
 

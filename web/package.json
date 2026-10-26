@@ -14,7 +14,7 @@
     "build": "astro build",
     "preview": "astro preview",
     "deploy": "wrangler deploy",
-    "check": "tsc --noEmit",
+    "check": "astro sync && tsc --noEmit",
     "test": "vitest run",
     "storybook": "storybook dev --port 6006",
     "build-storybook": "storybook build"
