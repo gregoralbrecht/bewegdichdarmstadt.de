@@ -1,5 +1,24 @@
 ---
+import { Font } from "astro:assets";
+import { contrastRatio, hexTokens } from "../lib/contrast";
 import { pageTitle } from "../lib/page-title";
+import { swatches } from "../lib/palette";
+import "../styles/tokens.css";
+import tokensCss from "../styles/tokens.css?raw";
+
+// Temporary token preview for the palette meeting with the client; replaced once real pages arrive.
+const hex = hexTokens(tokensCss);
+const ratio = new Intl.NumberFormat("de", {
+  minimumFractionDigits: 1,
+  maximumFractionDigits: 1,
+});
+const contrast = (text: string, surface: string) =>
+  ratio.format(contrastRatio(hex.get(text)!, hex.get(surface)!));
+
+const shadows = ["shadow-sm", "shadow", "shadow-lg"];
+const steps = ["step-4", "step-3", "step-2", "step-1", "step-0", "step--1"];
+const spaces = [1, 2, 3, 4, 5, 6, 7, 8].map((n) => `space-${n}`);
+const sample = "„Lauf mit!“ – Größe, Mühe, Spaß: Äpfel, Öfen, Übermut.";
 ---
 
 <!doctype html>
@@ -7,11 +26,319 @@ import { pageTitle } from "../lib/page-title";
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>{pageTitle()}</title>
+    <title>{pageTitle("Token-Vorschau")}</title>
+    <Font cssVariable="--font-display" preload />
+    <Font cssVariable="--font-text" preload />
   </head>
   <body>
-    <main>
+    <header class="wrap">
       <h1>Beweg dich, Darmstadt!</h1>
+      <p class="lead">
+        Token-Vorschau: Farben, Schatten, Schriften und Abstände aus{" "}
+        <code>tokens.css</code>. Die Farben sind Platzhalter, bis die Palette
+        steht.
+      </p>
+    </header>
+
+    <main class="wrap">
+      <section aria-labelledby="farben">
+        <h2 id="farben">Farben</h2>
+        <ul class="grid" role="list">
+          {swatches.map(({ token, role, pairs }) => (
+            <li class="swatch">
+              <div
+                class="chip"
+                style={`background: var(--${token})`}
+                aria-hidden="true"
+              />
+              <h3>
+                <code>--{token}</code>
+              </h3>
+              <p>
+                <code>{hex.get(token)}</code> · {role}
+              </p>
+              <ul class="pairs" role="list">
+                {pairs.map(({ text, surface }) => (
+                  <li
+                    style={`color: var(--${text}); background: var(--${surface})`}
+                  >
+                    {text} auf {surface}: {contrast(text, surface)}
+                  </li>
+                ))}
+              </ul>
+            </li>
+          ))}
+        </ul>
+      </section>
+
+      <section aria-labelledby="schatten">
+        <h2 id="schatten">Schatten und Rahmen</h2>
+        <ul class="grid" role="list">
+          {shadows.map((token) => (
+            <li class="box" style={`box-shadow: var(--${token})`}>
+              <code>--{token}</code>
+            </li>
+          ))}
+          <li class="box">
+            <code>--border</code>
+          </li>
+          <li class="box thin">
+            <code>--border-thin</code>
+          </li>
+          <li class="box pill">
+            <code>--radius-pill</code>
+          </li>
+        </ul>
+      </section>
+
+      <section aria-labelledby="schriften">
+        <h2 id="schriften">Schriften</h2>
+        <p class="font-sample display">
+          <span class="label">
+            Bricolage Grotesque, <code>--font-display</code>
+          </span>
+          {sample}
+        </p>
+        <p class="font-sample">
+          <span class="label">
+            Figtree, <code>--font-text</code>
+          </span>
+          {sample}
+        </p>
+      </section>
+
+      <section aria-labelledby="typo">
+        <h2 id="typo">Schriftgrößen</h2>
+        <ul class="stack" role="list">
+          {steps.map((token) => (
+            <li>
+              <span class="label">
+                <code>--{token}</code>
+              </span>
+              <span class="step" style={`font-size: var(--${token})`}>
+                Beweg dich
+              </span>
+            </li>
+          ))}
+        </ul>
+      </section>
+
+      <section aria-labelledby="abstaende">
+        <h2 id="abstaende">Abstände</h2>
+        <ul class="stack" role="list">
+          {spaces.map((token) => (
+            <li class="space">
+              <code>--{token}</code>
+              <span
+                class="bar"
+                style={`width: var(--${token})`}
+                aria-hidden="true"
+              />
+            </li>
+          ))}
+        </ul>
+      </section>
+
+      <section aria-labelledby="sticker">
+        <h2 id="sticker">Sticker-Karte</h2>
+        <ul class="cards" role="list">
+          <li>
+            <article class="card" style="--rot: -2deg">
+              <h3>
+                <a href="#sticker">Run &amp; Rave</a>
+              </h3>
+              <p>
+                <time datetime="2026-10-30T19:00">
+                  Freitag, 30. Oktober, 19 Uhr
+                </time>
+              </p>
+              <p>Fünf Kilometer durch die Stadt, danach Musik. Drück mich.</p>
+            </article>
+          </li>
+        </ul>
+      </section>
     </main>
   </body>
 </html>
+
+<style>
+  h1,
+  h2,
+  h3 {
+    font-family: var(--font-display);
+    font-weight: 800;
+    line-height: 1.05;
+    letter-spacing: -0.02em;
+    margin: 0 0 var(--space-4);
+  }
+  h1 {
+    font-size: var(--step-4);
+  }
+  h2 {
+    font-size: var(--step-3);
+  }
+  h3 {
+    font-size: var(--step-1);
+  }
+  p {
+    margin: 0 0 var(--space-3);
+    max-width: 65ch;
+  }
+  ul {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+  code {
+    font-size: 0.9em;
+  }
+
+  .wrap {
+    width: min(100% - 2 * var(--gutter), var(--maxw));
+    margin-inline: auto;
+  }
+  header {
+    padding-block: var(--space-7) var(--space-5);
+  }
+  .lead {
+    font-size: var(--step-1);
+    line-height: 1.4;
+  }
+  section {
+    padding-block: var(--space-6);
+  }
+  .grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(min(100%, 15rem), 1fr));
+    gap: var(--space-6) var(--space-5);
+  }
+  .label {
+    display: block;
+    font-family: var(--font-text);
+    font-size: var(--step--1);
+    color: var(--muted);
+  }
+
+  .swatch {
+    background: var(--card);
+    border: var(--border);
+    box-shadow: var(--shadow-sm);
+    padding: var(--space-4);
+  }
+  .swatch h3 {
+    margin-block: var(--space-3) var(--space-2);
+  }
+  .chip {
+    height: 5rem;
+    border: var(--border-thin);
+  }
+  .pairs {
+    display: grid;
+    gap: var(--space-2);
+  }
+  .pairs li {
+    border: var(--border-thin);
+    padding: var(--space-1) var(--space-2);
+    font-weight: 700;
+  }
+
+  .box {
+    background: var(--card);
+    border: var(--border);
+    padding: var(--space-5) var(--space-4);
+  }
+  .box.thin {
+    border: var(--border-thin);
+  }
+  .box.pill {
+    border-radius: var(--radius-pill);
+    text-align: center;
+  }
+
+  .font-sample {
+    font-size: var(--step-2);
+    line-height: 1.25;
+    margin-bottom: var(--space-5);
+  }
+  .font-sample.display {
+    font-family: var(--font-display);
+    font-weight: 800;
+  }
+
+  .stack {
+    display: grid;
+    gap: var(--space-4);
+  }
+  .step {
+    font-family: var(--font-display);
+    font-weight: 800;
+    line-height: 1.1;
+  }
+  .space {
+    display: flex;
+    align-items: center;
+    gap: var(--space-4);
+  }
+  .space code {
+    min-width: 7rem;
+  }
+  .bar {
+    height: var(--space-5);
+    background: var(--orange);
+    border: var(--border-thin);
+  }
+
+  .cards {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(min(100%, 20rem), 1fr));
+    padding: var(--space-4);
+  }
+  .card {
+    position: relative;
+    background: var(--pink);
+    border: var(--border);
+    box-shadow: var(--shadow);
+    padding: var(--space-5);
+    transform: rotate(var(--rot));
+    transition: transform var(--dur) var(--ease-spring);
+  }
+  .card p {
+    margin: 0;
+  }
+  .card a {
+    color: inherit;
+    text-decoration: none;
+  }
+  /* One link per card, stretched over the whole card. */
+  .card a::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+  }
+  .card a:focus-visible {
+    outline: none;
+  }
+  .card:has(a:focus-visible) {
+    outline: 3px solid var(--focus);
+    outline-offset: 3px;
+  }
+  .card:hover {
+    transform: translate(-2px, -2px) rotate(var(--rot));
+    box-shadow: 10px 10px 0 var(--line);
+  }
+  .card:active {
+    transform: translate(8px, 8px) rotate(var(--rot));
+    box-shadow: none;
+    transition-duration: var(--dur-fast);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    /* Keep the shadow change, drop the movement. */
+    .card,
+    .card:hover,
+    .card:active {
+      transform: rotate(var(--rot));
+      transition: none;
+    }
+  }
+</style>

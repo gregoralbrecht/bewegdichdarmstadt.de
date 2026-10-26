@@ -2,6 +2,13 @@
 
 This file is the single source of truth for the site's visual design. Change it here, in the repo.
 
+In code, every value below lives in [`web/src/styles/tokens.css`](../web/src/styles/tokens.css) as a CSS custom property. Change a value in both places in the same commit. The font stacks are the exception: the Astro Fonts API in `web/astro.config.ts` defines `--font-display` and `--font-text`.
+
+Tokens come in two layers:
+
+- **Primitives** name a raw value: `--ink`, `--cream`, `--orange`. Only the token file and the semantic layer use them.
+- **Semantic aliases** name a job: `--bg`, `--fg`, `--line`. Components use these, so a later palette swap or dark mode only touches the alias layer.
+
 ## Direction
 
 The site is **neobrutalist**: loud, tactile, playful, joyful, colorful, and a little crooked, but never at the cost of speed, accessibility or clean markup.
@@ -37,6 +44,20 @@ The palette is the pitch's, cut to one ink, two surfaces and three accents. Each
 | `--orange-deep` | #a85500 | Orange as text or link on light  | on cream      | 5.0         |
 | `--pink-deep`   | #b8326f | Pink as text on light            | on cream      | 5.3         |
 
+Semantic aliases:
+
+| Token      | Points to       | Job                                  |
+| ---------- | --------------- | ------------------------------------ |
+| `--bg`     | `--cream`       | Page background                      |
+| `--fg`     | `--ink`         | Body text                            |
+| `--line`   | `--ink`         | Borders and shadows                  |
+| `--card`   | `--white`       | Card and input surface               |
+| `--accent` | `--orange`      | Primary accent                       |
+| `--muted`  | #55536e         | Secondary text (no primitive behind) |
+| `--focus`  | `--orange-deep` | Focus outline                        |
+
+A Vitest test (`web/src/styles/contrast.test.ts`) reads the hex values from `tokens.css` and checks every pair in the Color table, including the "never" pairs below. Add a row there when you add a row here.
+
 Rules:
 
 - **Never put white text on orange (2.2) or pink.** Use ink.
@@ -65,11 +86,11 @@ Rules:
 - **Zero blur, always.** Blurred shadows break the style and cost paint time.
 - **One light source.** Shadows never point up or left.
 - **On mobile, step down one size** (`--shadow-lg` becomes `--shadow`) so offsets don't eat the 16px gutter.
-- **Radius is small or none:** 0 for cards, 999px for pills. Nothing in between.
+- **Radius is small or none:** 0 for cards, `--radius-pill` (999px) for pills. Nothing in between.
 
 **Focus states** must look different from hover:
 
-- Use `:focus-visible` with a 3px `--orange-deep` outline at 3px offset, on top of the normal shadow.
+- Use `:focus-visible` with a 3px `--focus` (`--orange-deep`) outline at 3px offset, on top of the normal shadow.
 - Never remove an outline without replacing it.
 - The focus ring must stay visible on tilted cards and inside dark indigo bands (use cream there).
 
@@ -98,7 +119,7 @@ Markup:
 
 ## Typography
 
-Two self-hosted fonts from the pitch: **Bricolage Grotesque** for display, **Figtree** for text. Each has a metric-matched fallback so the layout doesn't jump while fonts load.
+Two self-hosted fonts from the pitch: **Bricolage Grotesque** for display, **Figtree** for text. The files live in `web/src/assets/fonts/` and come in through the Astro Fonts API, which generates a metric-matched fallback face for each so the layout doesn't jump while fonts load.
 
 | Token            | Font                      | Use                                |
 | ---------------- | ------------------------- | ---------------------------------- |
@@ -109,10 +130,41 @@ Rules:
 
 - **WOFF2 only, subset to Latin plus German characters** (ä ö ü ß, „“, –).
 - **At most 2 font files preloaded** on any page. Use variable fonts or one weight per family.
-- **`font-display: swap`** with the fallback faces from the pitch.
+- **`font-display: swap`** with the generated fallback faces.
 - **Body text 18px minimum,** line height about 1.5, lines no wider than about 70 characters.
 - **Sizes in `rem`** with `clamp()` for headings, so browser zoom and user font settings work.
 - **Uppercase sparingly:** short labels only, with a little letter spacing.
+
+The type scale is fluid, from 320px to wide screens:
+
+| Token       | Range         | Use                     |
+| ----------- | ------------- | ----------------------- |
+| `--step-4`  | 2.6–5.6rem    | Page title (`<h1>`)     |
+| `--step-3`  | 2.1–3.6rem    | Section headings        |
+| `--step-2`  | 1.65–2.3rem   | Sub-headings            |
+| `--step-1`  | 1.3–1.6rem    | Card titles, lead text  |
+| `--step-0`  | 1.125–1.25rem | Body text (18px and up) |
+| `--step--1` | 0.875–0.95rem | Short labels only       |
+
+## Spacing and layout
+
+Spacing is one scale, used for padding, gaps and margins alike:
+
+| Token       | Value   |
+| ----------- | ------- |
+| `--space-1` | 0.25rem |
+| `--space-2` | 0.5rem  |
+| `--space-3` | 0.75rem |
+| `--space-4` | 1rem    |
+| `--space-5` | 1.5rem  |
+| `--space-6` | 2.25rem |
+| `--space-7` | 3.5rem  |
+| `--space-8` | 5.5rem  |
+
+Layout:
+
+- `--maxw` (72rem): the widest a content column gets.
+- `--gutter`: the side padding, 16px or the device's safe area, whichever is larger.
 
 ## Motion and micro-interactions
 
@@ -129,8 +181,8 @@ The core pattern is the **press**:
 
 Timing:
 
-- **Duration:** 120–200ms for hover and press, up to 400ms for entrances.
-- **Easing:** a spring with slight overshoot, e.g. `cubic-bezier(.34, 1.56, .64, 1)`, or `linear()` where supported.
+- **Duration:** `--dur-fast` (120ms) and `--dur` (200ms) for hover and press, `--dur-slow` (400ms) for entrances.
+- **Easing:** `--ease-spring`, a spring with slight overshoot (`cubic-bezier(.34, 1.56, .64, 1)`); `linear()` where supported.
 - **Animate only `transform` and `opacity`.** Never width, height, top or box-shadow blur.
 
 Allowed extras, each used sparingly:
