@@ -1,5 +1,6 @@
 .DS_Store
 node_modules/
+dist/
+.astro/
 pitch/deploy/public/
-pitch/deploy/node_modules/
 pitch/deploy/.cloudflare/

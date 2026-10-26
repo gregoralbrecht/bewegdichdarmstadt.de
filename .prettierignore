@@ -1,0 +1,7 @@
+pitch/
+openspec/changes/archive/
+dist/
+.astro/
+pnpm-lock.yaml
+.claude/
+.cloudflare/

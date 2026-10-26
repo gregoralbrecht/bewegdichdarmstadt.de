@@ -35,7 +35,7 @@ Captured via Claude in Chrome (Cloudflare blocks scripted access). Text is verba
   - "Beweg dich. Lauf mit uns."
   - Button "mehr Infos" → /aktuelles/
 - Lavender section (large smiley drawn behind text):
-  - "Ob allein oder mit Freund*innen - komm vorbei, mach mit und entdecke, wie vielseitig Bewegung sein kann. Von Yogamatte bis Tanzfläche, von Coaching bis Streetfood. *Beweg dich, Darmstadt* lädt dich ein, Neues auszuprobieren, dich auszutauschen und Teil einer lebendigen Community zu werden."
+  - "Ob allein oder mit Freund*innen - komm vorbei, mach mit und entdecke, wie vielseitig Bewegung sein kann. Von Yogamatte bis Tanzfläche, von Coaching bis Streetfood. _Beweg dich, Darmstadt_ lädt dich ein, Neues auszuprobieren, dich auszutauschen und Teil einer lebendigen Community zu werden."
 
 ## Aktuelles (`/aktuelles/`)
 
@@ -61,7 +61,7 @@ Captured via Claude in Chrome (Cloudflare blocks scripted access). Text is verba
 ## Über uns (`/ueber-uns/`)
 
 - H1: "Über uns"
-- "Hinte *Beweg dich, Darmstadt* stehen wir – vier selbstständige Frauen aus Darmstadt: Steffi, Lea, Mady und Rahel. Wir teilen die Vision, Darmstadt ein Stück bunter, offener und lebendiger zu machen. Gemeinsam schaffen wir Räume, in denen Menschen zusammenkommen, sich austauschen und erleben, was Bewegung in all ihren Facetten bewirken kann." `[TYPO: "Hinte" → "Hinter"]`
+- "Hinte _Beweg dich, Darmstadt_ stehen wir – vier selbstständige Frauen aus Darmstadt: Steffi, Lea, Mady und Rahel. Wir teilen die Vision, Darmstadt ein Stück bunter, offener und lebendiger zu machen. Gemeinsam schaffen wir Räume, in denen Menschen zusammenkommen, sich austauschen und erleben, was Bewegung in all ihren Facetten bewirken kann." `[TYPO: "Hinte" → "Hinter"]`
 - "Gerade in Zeiten, in denen so vieles spaltet, möchten wir zeigen: Zusammenkommen ist möglich. Austausch ist möglich. Ein neues Miteinander ist möglich."
 - **Steffi Rieger** (b/w photo, yoga pose):
   - "Steffi Rieger ist Yogalehrerin, Unternehmerin und Life & Team Coach. Als Gründerin von CITYOGA Darmstadt, dem Yoga Festival Darmstadt und dem Happy Place Darmstadt hat sie nicht nur inspirierende Räume für Yoga und Gemeinschaft geschaffen, sondern begleitet auch Teams und Einzelpersonen in ihrer persönlichen und beruflichen Entwicklung."

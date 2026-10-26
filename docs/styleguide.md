@@ -25,17 +25,17 @@ The quality bar sits above all four. When style and quality conflict, quality wi
 
 The palette is the pitch's, cut to one ink, two surfaces and three accents. Each accent has one job, and text on it is always ink unless the table says otherwise.
 
-| Token | Hex | Role | Text on it | Contrast |
-| --- | --- | --- | --- | --- |
-| `--ink` | #1b1a33 | Text, borders, shadows | cream / white | 15.9 / 16.9 |
-| `--cream` | #fff7ec | Page background | ink | 15.9 |
-| `--white` | #ffffff | Card and input surface | ink | 16.9 |
-| `--orange` | #f8971c | Primary accent: CTAs, highlights | ink | 7.6 |
-| `--pink` | #f29ac2 | Secondary accent: stickers, tags | ink | 8.2 |
-| `--indigo` | #25378d | Dark bands, footer, signal | white / cream | 10.4 / 9.8 |
-| `--muted` | #55536e | Secondary text on light | on cream | 6.9 |
-| `--orange-deep` | #a85500 | Orange as text or link on light | on cream | 5.0 |
-| `--pink-deep` | #b8326f | Pink as text on light | on cream | 5.3 |
+| Token           | Hex     | Role                             | Text on it    | Contrast    |
+| --------------- | ------- | -------------------------------- | ------------- | ----------- |
+| `--ink`         | #1b1a33 | Text, borders, shadows           | cream / white | 15.9 / 16.9 |
+| `--cream`       | #fff7ec | Page background                  | ink           | 15.9        |
+| `--white`       | #ffffff | Card and input surface           | ink           | 16.9        |
+| `--orange`      | #f8971c | Primary accent: CTAs, highlights | ink           | 7.6         |
+| `--pink`        | #f29ac2 | Secondary accent: stickers, tags | ink           | 8.2         |
+| `--indigo`      | #25378d | Dark bands, footer, signal       | white / cream | 10.4 / 9.8  |
+| `--muted`       | #55536e | Secondary text on light          | on cream      | 6.9         |
+| `--orange-deep` | #a85500 | Orange as text or link on light  | on cream      | 5.0         |
+| `--pink-deep`   | #b8326f | Pink as text on light            | on cream      | 5.3         |
 
 Rules:
 
@@ -52,13 +52,13 @@ Open question: indigo, orange and pink may be one accent too many. Try a version
 
 Shadows grow from the pitch's 4px and 7px to a three-step scale, always hard, always ink, always offset down-right.
 
-| Token | Value | Use |
-| --- | --- | --- |
-| `--shadow-sm` | `4px 4px 0 var(--ink)` | Buttons, tags, inputs |
-| `--shadow` | `8px 8px 0 var(--ink)` | Cards, sticker cards |
-| `--shadow-lg` | `12px 12px 0 var(--ink)` | Hero blocks, featured event |
-| `--border` | `3px solid var(--ink)` | Every card, button and input |
-| `--border-thin` | `2px solid var(--ink)` | Small chips, table rules |
+| Token           | Value                    | Use                          |
+| --------------- | ------------------------ | ---------------------------- |
+| `--shadow-sm`   | `4px 4px 0 var(--ink)`   | Buttons, tags, inputs        |
+| `--shadow`      | `8px 8px 0 var(--ink)`   | Cards, sticker cards         |
+| `--shadow-lg`   | `12px 12px 0 var(--ink)` | Hero blocks, featured event  |
+| `--border`      | `3px solid var(--ink)`   | Every card, button and input |
+| `--border-thin` | `2px solid var(--ink)`   | Small chips, table rules     |
 
 Rules:
 
@@ -100,10 +100,10 @@ Markup:
 
 Two self-hosted fonts from the pitch: **Bricolage Grotesque** for display, **Figtree** for text. Each has a metric-matched fallback so the layout doesn't jump while fonts load.
 
-| Token | Font | Use |
-| --- | --- | --- |
+| Token            | Font                      | Use                                |
+| ---------------- | ------------------------- | ---------------------------------- |
 | `--font-display` | Bricolage, then system-ui | Headings, card titles, big numbers |
-| `--font-text` | Figtree, then system-ui | Body, UI, forms |
+| `--font-text`    | Figtree, then system-ui   | Body, UI, forms                    |
 
 Rules:
 
@@ -120,12 +120,12 @@ Motion is small, springy and physical: things press, wiggle and settle. It is CS
 
 The core pattern is the **press**:
 
-| State | Transform | Shadow |
-| --- | --- | --- |
-| Rest | none | `--shadow` (8px) |
-| Hover | `translate(-2px, -2px)` | 10px |
-| Active (press) | `translate(8px, 8px)` | 0 |
-| Focus-visible | none | `--shadow` plus focus outline |
+| State          | Transform               | Shadow                        |
+| -------------- | ----------------------- | ----------------------------- |
+| Rest           | none                    | `--shadow` (8px)              |
+| Hover          | `translate(-2px, -2px)` | 10px                          |
+| Active (press) | `translate(8px, 8px)`   | 0                             |
+| Focus-visible  | none                    | `--shadow` plus focus outline |
 
 Timing:
 
