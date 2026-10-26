@@ -14,7 +14,7 @@
 ## 3. Token preview
 
 - [x] 3.1 Turn `web/src/pages/index.astro` into the token preview: swatches with hex, role and contrast pairs; shadow and border scale; both fonts with sample German text; type scale; spacing; one sticker card in a `<ul>` with the press interaction and reduced-motion handling; keep `.astro` thin (data in a `.ts` file if it grows logic); verify in the browser at 320px and desktop width, keyboard focus is visible, and axe in the browser reports no issues
-- [ ] 3.2 Verify `pnpm format:check`, `pnpm lint`, `pnpm check`, `pnpm test` and `pnpm build` pass, then after the user confirms the push, verify the deploy is green and the preview is live on the workers.dev URL
+- [x] 3.2 Verify `pnpm format:check`, `pnpm lint`, `pnpm check`, `pnpm test` and `pnpm build` pass, then after the user confirms the push, verify the deploy is green and the preview is live on the workers.dev URL
 
 ## Log
 
