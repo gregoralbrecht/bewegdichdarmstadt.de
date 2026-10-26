@@ -23,6 +23,8 @@ jobs:
       - run: pnpm format:check
       - run: pnpm lint
       - run: pnpm check
+      # Stories run as tests in headless Chromium.
+      - run: pnpm --filter web exec playwright install --with-deps --only-shell chromium
       - run: pnpm test
       - run: pnpm build
 

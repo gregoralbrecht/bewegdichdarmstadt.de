@@ -1,0 +1,22 @@
+/* The Astro Fonts API doesn't run in Storybook, so the same WOFF2 files load here by hand. */
+
+@font-face {
+  font-family: "Bricolage Grotesque";
+  src: url("../src/assets/fonts/bricolage-display.woff2") format("woff2");
+  font-weight: 500 800;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Figtree";
+  src: url("../src/assets/fonts/figtree.woff2") format("woff2");
+  font-weight: 400 800;
+  font-style: normal;
+  font-display: swap;
+}
+
+:root {
+  --font-display: "Bricolage Grotesque", system-ui, sans-serif;
+  --font-text: "Figtree", system-ui, sans-serif;
+}

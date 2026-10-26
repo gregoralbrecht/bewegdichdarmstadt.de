@@ -5,3 +5,4 @@ dist/
 .wrangler/
 pitch/deploy/public/
 pitch/deploy/.cloudflare/
+storybook-static/

@@ -1,0 +1,56 @@
+/* Press interaction from the styleguide, scaled to --shadow-sm: hover lifts by 2px, press sinks into the shadow. */
+.button {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  min-height: 48px;
+  padding: 0.6em 1.15em;
+  font: 700 var(--step-0) / 1.1 var(--font-text);
+  color: var(--fg);
+  background: var(--accent);
+  border: var(--border);
+  border-radius: var(--radius-pill);
+  box-shadow: var(--shadow-sm);
+  text-decoration: none;
+  cursor: pointer;
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
+  transition: transform var(--dur) var(--ease-spring);
+}
+
+.button[data-variant="pink"] {
+  background: var(--pink);
+}
+
+.button[data-size="small"] {
+  min-height: 40px;
+  padding: 0.4em 0.9em;
+  font-size: var(--step--1);
+}
+
+.button:hover {
+  transform: translate(-2px, -2px);
+  box-shadow: 6px 6px 0 var(--line);
+}
+
+.button:active {
+  transform: translate(4px, 4px);
+  box-shadow: none;
+  transition-duration: var(--dur-fast);
+}
+
+/* Focus looks different from hover: no lift, the normal shadow plus the outline. */
+.button:focus-visible {
+  outline: 3px solid var(--focus);
+  outline-offset: 3px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  /* Keep the shadow change, drop the movement. */
+  .button,
+  .button:hover,
+  .button:active {
+    transform: none;
+    transition: none;
+  }
+}

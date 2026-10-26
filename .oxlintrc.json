@@ -1,4 +1,9 @@
 {
   "$schema": "./node_modules/oxlint/configuration_schema.json",
-  "ignorePatterns": ["pitch/**", "**/dist/**", "**/.astro/**"]
+  "ignorePatterns": [
+    "pitch/**",
+    "**/dist/**",
+    "**/.astro/**",
+    "**/storybook-static/**"
+  ]
 }

@@ -1,6 +1,7 @@
 pitch/
 openspec/changes/archive/
 dist/
+storybook-static/
 .astro/
 pnpm-lock.yaml
 .claude/

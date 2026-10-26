@@ -197,6 +197,19 @@ Reduced motion:
 - Nothing loops forever without a pause control (WCAG 2.2.2).
 - Nothing flashes more than 3 times per second.
 
+## Components
+
+Reusable parts live in `web/src/components/<Name>/`, one folder per component. Pages, layouts and the page shell stay `.astro`.
+
+- **React `.tsx`** for every reusable part, so Storybook can render it. Astro renders it to static HTML at build time.
+- **No `client:*` by default.** Without it a component ships no JavaScript. Hydrate only when a component needs to react to the user after load, and say why next to the directive.
+- **Plain CSS per component** in `<Name>.css`, imported by the component and built only from tokens. No CSS-in-JS, no Tailwind. The root element gets a class named after the component (`.button`, `.heading`).
+- **Variants are `data-*` attributes** named after the prop: `variant="pink"` becomes `data-variant="pink"`, styled as `.button[data-variant="pink"]`. No modifier classes.
+- **Real elements decide behavior.** A component that can act as a link or a button renders `<a href>` or `<button type="button">`, never a `role`.
+- **Every component has stories** in `<Name>.stories.tsx`: one per variant, plus play functions for keyboard use and anything the markup must guarantee. `pnpm test` runs every story in Chromium, and an axe violation fails it.
+
+Storybook can't use the Astro Fonts API, so `web/.storybook/fonts.css` loads the same WOFF2 files with plain `@font-face` and sets `--font-display` and `--font-text`. Run it with `pnpm --filter web storybook`.
+
 ## Checklist for every page
 
 A page ships when every box below is ticked.
