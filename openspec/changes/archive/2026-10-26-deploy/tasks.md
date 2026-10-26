@@ -14,7 +14,7 @@
 ## 3. CI
 
 - [x] 3.1 Add a `deploy` job to `.github/workflows/ci.yml` (`needs` the checks job, runs only on push to main, own concurrency group without cancel-in-progress, secrets passed as env); verify the workflow file passes `actionlint` or a dry read of `gh workflow view`
-- [ ] 3.2 After the user confirms the push, push to main and verify the run is green, the deploy job ran after the checks, and the workers.dev URL serves the new build
+- [x] 3.2 After the user confirms the push, push to main and verify the run is green, the deploy job ran after the checks, and the workers.dev URL serves the new build
 
 ## Log
 
