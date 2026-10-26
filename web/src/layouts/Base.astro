@@ -1,0 +1,122 @@
+---
+import { Font } from "astro:assets";
+import { Logo } from "../components/Logo/Logo";
+import { pageTitle } from "../lib/page-title";
+import "../styles/tokens.css";
+
+type Props = { title?: string };
+
+const { title } = Astro.props;
+---
+
+<!doctype html>
+<html lang="de">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{pageTitle(title)}</title>
+    <Font cssVariable="--font-display" preload />
+    <Font cssVariable="--font-text" preload />
+  </head>
+  <body>
+    <a class="skip" href="#main">
+      Zum Inhalt springen
+    </a>
+    <header class="wrap">
+      <Logo />
+    </header>
+    <main id="main">
+      <slot />
+    </main>
+    <footer>
+      <div class="wrap">
+        <p>
+          <a href="https://www.instagram.com/bewegdichdarmstadt/">
+            Instagram @bewegdichdarmstadt
+          </a>
+        </p>
+        <nav aria-label="Rechtliches">
+          <ul role="list">
+            <li>
+              <a href="/impressum">Impressum</a>
+            </li>
+            <li>
+              <a href="/datenschutz">Datenschutz</a>
+            </li>
+          </ul>
+        </nav>
+      </div>
+    </footer>
+  </body>
+</html>
+
+<style>
+  /* The footer sits at the window's bottom edge on short pages. Percent heights, not vh/svh/dvh, which
+     mobile browsers resolve inconsistently. */
+  html {
+    height: 100%;
+  }
+  body {
+    min-height: 100%;
+    display: flex;
+    flex-direction: column;
+  }
+  main {
+    flex: 1;
+  }
+
+  .wrap {
+    width: min(100% - 2 * var(--gutter), var(--maxw));
+    margin-inline: auto;
+  }
+
+  /* Off-screen until the first Tab lands on it. */
+  .skip {
+    position: absolute;
+    top: var(--space-3);
+    left: var(--gutter);
+    z-index: 1;
+    padding: var(--space-2) var(--space-4);
+    font-weight: 700;
+    color: var(--fg);
+    background: var(--card);
+    border: var(--border);
+    box-shadow: var(--shadow-sm);
+    transform: translateY(calc(-100% - var(--space-5)));
+  }
+  .skip:focus {
+    transform: none;
+  }
+
+  header {
+    padding-block: var(--space-5);
+  }
+
+  footer {
+    /* orange-deep, the global focus color, is about 2:1 on indigo; orange is 4.7. */
+    --focus: var(--orange);
+    padding-block: var(--space-6);
+    color: var(--white);
+    background: var(--indigo);
+  }
+  footer .wrap {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    gap: var(--space-4) var(--space-6);
+  }
+  footer p {
+    margin: 0;
+  }
+  footer ul {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-2) var(--space-5);
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+  footer a {
+    color: inherit;
+  }
+</style>

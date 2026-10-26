@@ -1,0 +1,10 @@
+.logo {
+  display: inline-block;
+  font-family: var(--font-display);
+  font-weight: 800;
+  font-size: var(--step-1);
+  line-height: 1.05;
+  letter-spacing: -0.02em;
+  color: var(--fg);
+  text-decoration: none;
+}

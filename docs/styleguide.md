@@ -32,17 +32,17 @@ The quality bar sits above all four. When style and quality conflict, quality wi
 
 The palette is the pitch's, cut to one ink, two surfaces and three accents. Each accent has one job, and text on it is always ink unless the table says otherwise.
 
-| Token           | Hex     | Role                             | Text on it    | Contrast    |
-| --------------- | ------- | -------------------------------- | ------------- | ----------- |
-| `--ink`         | #1b1a33 | Text, borders, shadows           | cream / white | 15.9 / 16.9 |
-| `--cream`       | #fff7ec | Page background                  | ink           | 15.9        |
-| `--white`       | #ffffff | Card and input surface           | ink           | 16.9        |
-| `--orange`      | #f8971c | Primary accent: CTAs, highlights | ink           | 7.6         |
-| `--pink`        | #f29ac2 | Secondary accent: stickers, tags | ink           | 8.2         |
-| `--indigo`      | #25378d | Dark bands, footer, signal       | white / cream | 10.4 / 9.8  |
-| `--muted`       | #55536e | Secondary text on light          | on cream      | 6.9         |
-| `--orange-deep` | #a85500 | Orange as text or link on light  | on cream      | 5.0         |
-| `--pink-deep`   | #b8326f | Pink as text on light            | on cream      | 5.3         |
+| Token           | Hex     | Role                             | Text on it             | Contrast         |
+| --------------- | ------- | -------------------------------- | ---------------------- | ---------------- |
+| `--ink`         | #1b1a33 | Text, borders, shadows           | cream / white          | 15.9 / 16.9      |
+| `--cream`       | #fff7ec | Page background                  | ink                    | 15.9             |
+| `--white`       | #ffffff | Card and input surface           | ink                    | 16.9             |
+| `--orange`      | #f8971c | Primary accent: CTAs, highlights | ink                    | 7.6              |
+| `--pink`        | #f29ac2 | Secondary accent: stickers, tags | ink                    | 8.2              |
+| `--indigo`      | #25378d | Dark bands, footer, signal       | white / cream / orange | 10.4 / 9.8 / 4.7 |
+| `--muted`       | #55536e | Secondary text on light          | on cream               | 6.9              |
+| `--orange-deep` | #a85500 | Orange as text or link on light  | on cream               | 5.0              |
+| `--pink-deep`   | #b8326f | Pink as text on light            | on cream               | 5.3              |
 
 Semantic aliases:
 
@@ -92,7 +92,7 @@ Rules:
 
 - Use `:focus-visible` with a 3px `--focus` (`--orange-deep`) outline at 3px offset, on top of the normal shadow.
 - Never remove an outline without replacing it.
-- The focus ring must stay visible on tilted cards and inside dark indigo bands (use cream there).
+- The focus ring must stay visible on tilted cards and inside dark indigo bands (use `--orange` there, 4.7 on indigo).
 
 ## Sticker cards
 

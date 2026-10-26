@@ -39,6 +39,8 @@ export const swatches: Swatch[] = [
     pairs: [
       { text: "white", surface: "indigo" },
       { text: "cream", surface: "indigo" },
+      // The footer's focus ring.
+      { text: "orange", surface: "indigo" },
     ],
   },
   {
