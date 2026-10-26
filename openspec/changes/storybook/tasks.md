@@ -9,7 +9,7 @@
 ## 2. Stories as tests
 
 - [x] 2.1 Add `@storybook/addon-vitest` (Vitest browser mode, Playwright Chromium) and `@storybook/addon-a11y` with violations set to fail; keep the existing node tests (contrast, page title) in their own Vitest project; verify `pnpm test` runs both projects and a story with a deliberate contrast error fails
-- [ ] 2.2 Install the Playwright browser in `.github/workflows/ci.yml` before `pnpm test` (any new action pinned to a commit SHA with a version comment); verify CI is green on the pushed branch
+- [x] 2.2 Install the Playwright browser in `.github/workflows/ci.yml` before `pnpm test` (any new action pinned to a commit SHA with a version comment); verify CI is green on the pushed branch
 
 ## 3. Button
 
@@ -23,7 +23,7 @@
 ## 5. Wrap-up
 
 - [x] 5.1 Add a "Components" section to `docs/styleguide.md`: React `.tsx` for reusable parts, no `client:*` by default, plain CSS per component, `data-*` variants, every component with stories; verify each convention matches the Button and Heading code
-- [ ] 5.2 Verify `pnpm format:check`, `pnpm lint`, `pnpm check`, `pnpm test` and `pnpm build` pass, then after the user confirms the push, verify CI and the deploy are green
+- [x] 5.2 Verify `pnpm format:check`, `pnpm lint`, `pnpm check`, `pnpm test` and `pnpm build` pass, then after the user confirms the push, verify CI and the deploy are green
 
 ## Log
 
