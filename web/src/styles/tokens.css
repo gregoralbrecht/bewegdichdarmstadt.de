@@ -2,32 +2,40 @@
    Font stacks (--font-display, --font-text) come from the Astro Fonts API in astro.config.ts. */
 
 :root {
-  /* Primitives: the palette. Components use the semantic aliases below instead. */
+  /* Primitives: the palette. Components use the surface roles below instead. */
   --ink: #1b1a33;
+  --night: #141c4d;
   --cream: #fff7ec;
   --white: #ffffff;
   --orange: #f8971c;
-  --pink: #f29ac2;
-  --indigo: #25378d;
+  --pink: #ff90e8;
+  --violet: #b05cf8;
   --orange-deep: #a85500;
-  --pink-deep: #b8326f;
+  --muted-light: #55536e;
+  --muted-dark: #c9c6e6;
 
-  /* Semantic aliases. --muted has no primitive of its own. */
-  --bg: var(--cream);
-  --fg: var(--ink);
-  --line: var(--ink);
-  --card: var(--white);
-  --accent: var(--orange);
-  --muted: #55536e;
-  --focus: var(--orange-deep);
+  /* WIP: the tag palette, placeholders until the palette meeting. For tags and card fills only,
+     always with ink text, never as a surface. */
+  --tag-lime: #c6f36b;
+  --tag-sky: #8fd3ff;
+  --tag-mint: #9ef0c8;
+  --tag-lilac: #d4b8ff;
+  --tag-yellow: #ffd84d;
+  --tag-lavender: #dcd8f0;
+  --tag-peach: #ffc3a0;
 
-  /* Shadows and borders: hard, ink, down-right. */
-  --shadow-sm: 4px 4px 0 var(--line);
-  --shadow: 8px 8px 0 var(--line);
-  --shadow-lg: 12px 12px 0 var(--line);
-  --border: 3px solid var(--line);
-  --border-thin: 2px solid var(--line);
-  --radius-pill: 999px;
+  /* Shadows are offsets; the use site adds the color (`var(--shadow) var(--line)`), so it resolves
+     inside the element's surface. Hard, zero blur, down-right. */
+  --shadow-sm: 4px 4px 0;
+  --shadow: 8px 8px 0;
+  --shadow-lg: 12px 12px 0;
+  --shadow-pop: 0.06em 0.06em 0;
+  /* Borders outline filled shapes (buttons, cards, tags) and stay ink on every surface. */
+  --border: 3px solid var(--ink);
+  --border-thin: 2px solid var(--ink);
+  --radius-control: 0;
+  --radius-card: 1.5rem;
+  --radius-tag: 999px;
 
   /* Type scale. --step-0 is body text and never drops below 18px. */
   --step--1: clamp(0.875rem, 0.85rem + 0.15vw, 0.95rem);
@@ -58,6 +66,121 @@
   --gutter: max(16px, env(safe-area-inset-left), env(safe-area-inset-right));
 }
 
+/* Surfaces. A section sets `data-surface` once; everything inside reads the roles, never the
+   primitives. Every block declares every role, and contrast.test.ts checks each one. */
+:root,
+[data-surface="cream"] {
+  --bg: var(--cream);
+  --fg: var(--ink);
+  --muted: var(--muted-light);
+  --line: var(--ink);
+  --pop: var(--orange);
+  --accent: var(--orange);
+  --on-accent: var(--ink);
+  --link: var(--orange-deep);
+  --focus: var(--orange-deep);
+  --hero-1: var(--pink);
+  --hero-2: var(--violet);
+  background: var(--bg);
+  color: var(--fg);
+}
+
+[data-surface="white"] {
+  --bg: var(--white);
+  --fg: var(--ink);
+  --muted: var(--muted-light);
+  --line: var(--ink);
+  --pop: var(--orange);
+  --accent: var(--orange);
+  --on-accent: var(--ink);
+  --link: var(--orange-deep);
+  --focus: var(--orange-deep);
+  --hero-1: var(--pink);
+  --hero-2: var(--violet);
+  background: var(--bg);
+  color: var(--fg);
+}
+
+[data-surface="night"] {
+  --bg: var(--night);
+  --fg: var(--white);
+  --muted: var(--muted-dark);
+  --line: var(--orange);
+  --pop: var(--orange);
+  --accent: var(--orange);
+  --on-accent: var(--ink);
+  --link: var(--pink);
+  --focus: var(--orange);
+  --hero-1: var(--pink);
+  --hero-2: var(--violet);
+  background: var(--bg);
+  color: var(--fg);
+}
+
+[data-surface="ink"] {
+  --bg: var(--ink);
+  --fg: var(--cream);
+  --muted: var(--muted-dark);
+  --line: var(--orange);
+  --pop: var(--orange);
+  --accent: var(--orange);
+  --on-accent: var(--ink);
+  --link: var(--orange);
+  --focus: var(--orange);
+  --hero-1: var(--pink);
+  --hero-2: var(--violet);
+  background: var(--bg);
+  color: var(--fg);
+}
+
+[data-surface="orange"] {
+  --bg: var(--orange);
+  --fg: var(--ink);
+  --muted: var(--ink);
+  --line: var(--ink);
+  --pop: var(--white);
+  --accent: var(--white);
+  --on-accent: var(--ink);
+  --link: var(--ink);
+  --focus: var(--ink);
+  --hero-1: var(--pink);
+  --hero-2: var(--violet);
+  background: var(--bg);
+  color: var(--fg);
+}
+
+[data-surface="pink"] {
+  --bg: var(--pink);
+  --fg: var(--ink);
+  --muted: var(--ink);
+  --line: var(--ink);
+  --pop: var(--white);
+  --accent: var(--orange);
+  --on-accent: var(--ink);
+  --link: var(--ink);
+  --focus: var(--ink);
+  --hero-1: var(--violet);
+  --hero-2: var(--white);
+  background: var(--bg);
+  color: var(--fg);
+}
+
+[data-surface="violet"] {
+  --bg: var(--violet);
+  --fg: var(--ink);
+  --muted: var(--ink);
+  --line: var(--ink);
+  --pop: var(--white);
+  --accent: var(--orange);
+  --on-accent: var(--ink);
+  --link: var(--ink);
+  --focus: var(--ink);
+  --hero-1: var(--pink);
+  --hero-2: var(--white);
+  background: var(--bg);
+  color: var(--fg);
+}
+
 *,
 *::before,
 *::after {
@@ -81,4 +204,8 @@ body {
 :focus-visible {
   outline: 3px solid var(--focus);
   outline-offset: 3px;
+}
+
+a {
+  color: var(--link);
 }

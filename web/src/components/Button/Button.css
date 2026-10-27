@@ -1,4 +1,5 @@
-/* Press interaction from the styleguide, scaled to --shadow-sm: hover lifts by 2px, press sinks into the shadow. */
+/* Press interaction from the styleguide, scaled to --shadow-sm: hover lifts by 2px, press sinks into the shadow.
+   Colors come from the surface, so the same button works on cream, night or orange. */
 .button {
   display: inline-flex;
   align-items: center;
@@ -6,20 +7,16 @@
   min-height: 48px;
   padding: 0.6em 1.15em;
   font: 700 var(--step-0) / 1.1 var(--font-text);
-  color: var(--fg);
+  color: var(--on-accent);
   background: var(--accent);
   border: var(--border);
-  border-radius: var(--radius-pill);
-  box-shadow: var(--shadow-sm);
+  border-radius: var(--radius-control);
+  box-shadow: var(--shadow-sm) var(--line);
   text-decoration: none;
   cursor: pointer;
   touch-action: manipulation;
   -webkit-tap-highlight-color: transparent;
   transition: transform var(--dur) var(--ease-spring);
-}
-
-.button[data-variant="pink"] {
-  background: var(--pink);
 }
 
 .button[data-size="small"] {
@@ -39,6 +36,64 @@
   transition-duration: var(--dur-fast);
 }
 
+/* An outline in the surface's line color; hover fills it instead of lifting. */
+.button[data-variant="secondary"],
+.button[data-variant="secondary"]:hover,
+.button[data-variant="secondary"]:active {
+  transform: none;
+  box-shadow: none;
+}
+.button[data-variant="secondary"] {
+  color: var(--fg);
+  background: transparent;
+  border-color: var(--line);
+  transition: none;
+}
+.button[data-variant="secondary"]:hover {
+  color: var(--bg);
+  background: var(--line);
+}
+
+/* Two layers behind the button, each a fill shadow (spread -3px) over an edge shadow in --line, so
+   the button stays one element. On hover it lifts by one step while the step doubles: the first
+   layer stays where it was, the second one jumps out. */
+.button[data-variant="hero"] {
+  --hero-step: 6px;
+  --hero-lift: 6px;
+  position: relative;
+  box-shadow:
+    var(--hero-step) var(--hero-step) 0 -3px var(--hero-1),
+    var(--hero-step) var(--hero-step) 0 0 var(--line),
+    calc(2 * var(--hero-step)) calc(2 * var(--hero-step)) 0 -3px var(--hero-2),
+    calc(2 * var(--hero-step)) calc(2 * var(--hero-step)) 0 0 var(--line);
+  transition:
+    transform var(--dur) var(--ease-spring),
+    box-shadow var(--dur) var(--ease-spring);
+}
+/* Keeps the hover zone over the spot the lifted button left, so the pointer doesn't drop out. */
+.button[data-variant="hero"]::after {
+  content: "";
+  position: absolute;
+  inset: -3px calc(-3px - var(--hero-lift)) calc(-3px - var(--hero-lift)) -3px;
+}
+.button[data-variant="hero"]:hover {
+  transform: none;
+}
+@media (hover: hover) {
+  .button[data-variant="hero"]:hover {
+    --hero-step: 12px;
+    transform: translate(
+      calc(-1 * var(--hero-lift)),
+      calc(-1 * var(--hero-lift))
+    );
+  }
+}
+.button[data-variant="hero"]:active {
+  --hero-step: 0px;
+  transform: translate(var(--hero-lift), var(--hero-lift));
+  transition-duration: var(--dur-fast);
+}
+
 /* Focus looks different from hover: no lift, the normal shadow plus the outline. */
 .button:focus-visible {
   outline: 3px solid var(--focus);
@@ -49,7 +104,9 @@
   /* Keep the shadow change, drop the movement. */
   .button,
   .button:hover,
-  .button:active {
+  .button:active,
+  .button[data-variant="hero"]:hover,
+  .button[data-variant="hero"]:active {
     transform: none;
     transition: none;
   }

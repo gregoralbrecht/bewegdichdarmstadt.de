@@ -1,0 +1,202 @@
+---
+import { Button } from "../components/Button/Button";
+import { Card } from "../components/Card/Card";
+import { Heading } from "../components/Heading/Heading";
+import { Section } from "../components/Section/Section";
+import { Tag } from "../components/Tag/Tag";
+import Base from "../layouts/Base.astro";
+import { contrastRatio, hexTokens, surfaceTokens } from "../lib/contrast";
+import { surfaces, tagNames, type Surface } from "../lib/palette";
+import tokensCss from "../styles/tokens.css?raw";
+
+// Preview of the surface system for the palette meeting with the client; not for search engines.
+const roles = surfaceTokens(tokensCss, hexTokens(tokensCss));
+const ratio = new Intl.NumberFormat("de", {
+  minimumFractionDigits: 1,
+  maximumFractionDigits: 1,
+});
+const contrast = (surface: Surface, role: string) => {
+  const r = roles.get(surface)!;
+  return ratio.format(contrastRatio(r.get(role)!, r.get("bg")!));
+};
+
+const names: Record<Surface, string> = {
+  cream: "Creme",
+  white: "Weiß",
+  night: "Nacht",
+  ink: "Tinte",
+  orange: "Orange",
+  pink: "Pink",
+  violet: "Violett",
+};
+
+const slots = [
+  { time: "14:00", title: "Yoga im Park", kind: "Ruhe", fill: "mint" },
+  { time: "15:30", title: "Tanz-Workshop", kind: "Tanz", fill: "peach" },
+  { time: "17:00", title: "Staffellauf", kind: "Laufen", fill: "lime" },
+] as const;
+---
+
+<Base title="Gestaltung" robots="noindex">
+  <Section surface="night" aria-labelledby="gestaltung">
+    <div class="stack">
+      <Heading level={1} id="gestaltung">
+        Gestaltung
+      </Heading>
+      <p class="lead">
+        Jede Fläche setzt ihre Farben einmal, und alles darin folgt: Text,
+        Links, Buttons, Karten und Schatten. Die Werte sind Platzhalter, bis die
+        Palette steht.
+      </p>
+      <p class="actions">
+        <Button variant="hero" href="#flaechen">
+          Flächen ansehen
+        </Button>
+        <a href="#tags">Zur Tag-Palette</a>
+      </p>
+    </div>
+  </Section>
+
+  <div id="flaechen">
+    {surfaces.map((surface) => (
+      <Section surface={surface} aria-labelledby={`flaeche-${surface}`}>
+        <div class="split">
+          <div class="stack">
+            <Heading level={2} id={`flaeche-${surface}`}>
+              {names[surface]}
+            </Heading>
+            <p>
+              Fließtext auf <code>data-surface="{surface}"</code>. Hier steht,
+              worum es geht, mit einem <a href="#flaechen">Link im Text</a>.
+            </p>
+            <p class="muted">
+              Kontrast: Text {contrast(surface, "fg")}, Nebentext{" "}
+              {contrast(surface, "muted")}, Link {contrast(surface, "link")},
+              Fokus {contrast(surface, "focus")}
+            </p>
+            <p class="actions">
+              <Button href="#flaechen">Mitmachen</Button>
+              <Button variant="secondary" href="#flaechen">
+                Mehr erfahren
+              </Button>
+            </p>
+          </div>
+          <Card>
+            <Heading level={3}>Run &amp; Rave</Heading>
+            <p>
+              <time datetime="2026-10-30T19:00">
+                Freitag, 30. Oktober, 19 Uhr
+              </time>
+            </p>
+            <p>
+              Fünf Kilometer durch die Stadt, danach Musik.{" "}
+              <a href="#flaechen">Details</a>
+            </p>
+          </Card>
+        </div>
+      </Section>
+    ))}
+  </div>
+
+  <Section surface="cream" aria-labelledby="festival">
+    <div class="stack">
+      <Heading level={2} id="festival">
+        Festival-Programm
+      </Heading>
+      <p>
+        Farbige Karten nur, wenn die Farbe etwas bedeutet: hier die Art des
+        Programmpunkts, immer auch als Wort.
+      </p>
+      <ul class="slots" role="list">
+        {slots.map(({ time, title, kind, fill }) => (
+          <li>
+            <Card fill={fill}>
+              <p class="time">
+                <time datetime={`2027-06-12T${time}`}>{time}</time>
+              </p>
+              <Heading level={3}>{title}</Heading>
+              <Tag color={fill}>{kind}</Tag>
+            </Card>
+          </li>
+        ))}
+      </ul>
+    </div>
+  </Section>
+
+  <Section surface="cream" aria-labelledby="tags-titel" id="tags">
+    <div class="stack">
+      <Heading level={2} id="tags-titel">
+        Tag-Palette (WIP)
+      </Heading>
+      <p>
+        Noch offen: Die Farben werden mit euch festgelegt. Nur für Tags und
+        Kartenfüllungen, immer mit dunkler Schrift.
+      </p>
+      <ul class="tags" role="list">
+        {tagNames.map((color) => (
+          <li>
+            <Tag color={color}>{color}</Tag>
+          </li>
+        ))}
+      </ul>
+    </div>
+  </Section>
+</Base>
+
+<style>
+  .stack > :global(*) {
+    margin-block: 0 var(--space-4);
+  }
+  .stack > :global(:last-child) {
+    margin-bottom: 0;
+  }
+  p {
+    max-width: 65ch;
+  }
+  .lead {
+    font-size: var(--step-1);
+    line-height: 1.4;
+  }
+  .muted {
+    color: var(--muted);
+    font-size: var(--step--1);
+  }
+  /* Room for the hard shadows and the hero's layers. */
+  .actions {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--space-5) var(--space-6);
+    padding-block: var(--space-2) var(--space-4);
+  }
+  .split {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 20rem), 1fr));
+    align-items: start;
+    gap: var(--space-6);
+  }
+  ul {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+  .slots {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(min(100%, 15rem), 1fr));
+    gap: var(--space-6) var(--space-5);
+  }
+  .slots :global(.card) {
+    height: 100%;
+  }
+  .time {
+    font-family: var(--font-display);
+    font-weight: 800;
+    font-size: var(--step-2);
+    margin: 0 0 var(--space-2);
+  }
+  .tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-2) var(--space-3);
+  }
+</style>

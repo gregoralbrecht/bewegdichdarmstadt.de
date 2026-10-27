@@ -4,9 +4,13 @@ import { Logo } from "../components/Logo/Logo";
 import { pageTitle } from "../lib/page-title";
 import "../styles/tokens.css";
 
-type Props = { title?: string };
+type Props = {
+  title?: string;
+  /** The robots meta tag, e.g. `noindex` for preview pages. */
+  robots?: string;
+};
 
-const { title } = Astro.props;
+const { title, robots } = Astro.props;
 ---
 
 <!doctype html>
@@ -15,11 +19,12 @@ const { title } = Astro.props;
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>{pageTitle(title)}</title>
+    {robots && <meta name="robots" content={robots} />}
     <Font cssVariable="--font-display" preload />
     <Font cssVariable="--font-text" preload />
   </head>
   <body>
-    <a class="skip" href="#main">
+    <a class="skip" href="#main" data-surface="white">
       Zum Inhalt springen
     </a>
     <header class="wrap">
@@ -28,7 +33,7 @@ const { title } = Astro.props;
     <main id="main">
       <slot />
     </main>
-    <footer>
+    <footer data-surface="ink">
       <div class="wrap">
         <p>
           <a href="https://www.instagram.com/bewegdichdarmstadt/">
@@ -79,9 +84,8 @@ const { title } = Astro.props;
     padding: var(--space-2) var(--space-4);
     font-weight: 700;
     color: var(--fg);
-    background: var(--card);
     border: var(--border);
-    box-shadow: var(--shadow-sm);
+    box-shadow: var(--shadow-sm) var(--line);
     transform: translateY(calc(-100% - var(--space-5)));
   }
   .skip:focus {
@@ -93,11 +97,7 @@ const { title } = Astro.props;
   }
 
   footer {
-    /* orange-deep, the global focus color, is about 2:1 on indigo; orange is 4.7. */
-    --focus: var(--orange);
     padding-block: var(--space-6);
-    color: var(--white);
-    background: var(--indigo);
   }
   footer .wrap {
     display: flex;

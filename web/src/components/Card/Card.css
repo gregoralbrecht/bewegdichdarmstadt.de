@@ -1,0 +1,50 @@
+/* A white island on any surface: the outer frame reads --line from the parent surface, so the
+   shadow is ink on cream and orange on night, while the body is always white inside. */
+.card {
+  border: var(--border);
+  border-radius: var(--radius-card);
+  box-shadow: var(--shadow) var(--line);
+}
+
+.card__body {
+  height: 100%;
+  padding: var(--space-5);
+  border-radius: calc(var(--radius-card) - 3px);
+}
+
+.card__body > :first-child {
+  margin-top: 0;
+}
+
+.card__body > :last-child {
+  margin-bottom: 0;
+}
+
+/* A fill from the tag palette, only when the color carries meaning. Like the loud surfaces, a fill
+   turns secondary text, links and focus ink; orange-deep and muted-light fail on some tag colors. */
+.card[data-fill] > .card__body {
+  --muted: var(--ink);
+  --link: var(--ink);
+  --focus: var(--ink);
+}
+.card[data-fill="lime"] > .card__body {
+  --bg: var(--tag-lime);
+}
+.card[data-fill="sky"] > .card__body {
+  --bg: var(--tag-sky);
+}
+.card[data-fill="mint"] > .card__body {
+  --bg: var(--tag-mint);
+}
+.card[data-fill="lilac"] > .card__body {
+  --bg: var(--tag-lilac);
+}
+.card[data-fill="yellow"] > .card__body {
+  --bg: var(--tag-yellow);
+}
+.card[data-fill="lavender"] > .card__body {
+  --bg: var(--tag-lavender);
+}
+.card[data-fill="peach"] > .card__body {
+  --bg: var(--tag-peach);
+}

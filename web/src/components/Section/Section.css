@@ -1,0 +1,9 @@
+/* The surface itself comes from tokens.css; the section adds the band's padding and content column. */
+.section {
+  padding-block: var(--space-7);
+}
+
+.section__inner {
+  width: min(100% - 2 * var(--gutter), var(--maxw));
+  margin-inline: auto;
+}

@@ -2,7 +2,8 @@ import type { ComponentPropsWithoutRef, ReactNode } from "react";
 import "./Button.css";
 
 type Common = {
-  variant?: "primary" | "pink";
+  /** `hero` is for the one main call to action per page; never next to another button. */
+  variant?: "primary" | "secondary" | "hero";
   size?: "small";
   children: ReactNode;
 };

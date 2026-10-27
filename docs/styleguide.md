@@ -6,8 +6,8 @@ In code, every value below lives in [`web/src/styles/tokens.css`](../web/src/sty
 
 Tokens come in two layers:
 
-- **Primitives** name a raw value: `--ink`, `--cream`, `--orange`. Only the token file and the semantic layer use them.
-- **Semantic aliases** name a job: `--bg`, `--fg`, `--line`. Components use these, so a later palette swap or dark mode only touches the alias layer.
+- **Primitives** name a raw value: `--ink`, `--cream`, `--orange`. Only the token file uses them.
+- **Surface roles** name a job: `--bg`, `--fg`, `--line`. Each surface sets every role, and components read roles only, so a section that changes its surface recolors everything inside it.
 
 ## Direction
 
@@ -15,7 +15,7 @@ The site is **neobrutalist**: loud, tactile, playful, joyful, colorful, and a li
 
 Four pillars define the look:
 
-1. **Huge hard drop shadows everywhere.** Offset, zero blur, always in ink.
+1. **Huge hard drop shadows everywhere.** Offset, zero blur, in the surface's `--line` color.
 2. **A bold but limited palette.** Ink, two backgrounds, a few accents. Nothing else.
 3. **High contrast.** Every text and color pair passes WCAG AA; body text aims for AAA.
 4. **Sticker-style feature cards.** Thick outlines, slight tilt, they look stuck onto the page.
@@ -30,69 +30,88 @@ The quality bar sits above all four. When style and quality conflict, quality wi
 
 > **Draft:** The colors below are not final. Gregor and the client will define the palette together in a meeting; until then, treat these values as placeholders.
 
-The palette is the pitch's, cut to one ink, two surfaces and three accents. Each accent has one job, and text on it is always ink unless the table says otherwise.
+### Surfaces
 
-| Token           | Hex     | Role                             | Text on it             | Contrast         |
-| --------------- | ------- | -------------------------------- | ---------------------- | ---------------- |
-| `--ink`         | #1b1a33 | Text, borders, shadows           | cream / white          | 15.9 / 16.9      |
-| `--cream`       | #fff7ec | Page background                  | ink                    | 15.9             |
-| `--white`       | #ffffff | Card and input surface           | ink                    | 16.9             |
-| `--orange`      | #f8971c | Primary accent: CTAs, highlights | ink                    | 7.6              |
-| `--pink`        | #f29ac2 | Secondary accent: stickers, tags | ink                    | 8.2              |
-| `--indigo`      | #25378d | Dark bands, footer, signal       | white / cream / orange | 10.4 / 9.8 / 4.7 |
-| `--muted`       | #55536e | Secondary text on light          | on cream               | 6.9              |
-| `--orange-deep` | #a85500 | Orange as text or link on light  | on cream               | 5.0              |
-| `--pink-deep`   | #b8326f | Pink as text on light            | on cream               | 5.3              |
+A section picks one surface with `data-surface` (the `Section` component's `surface` prop), and everything inside follows. The page itself is cream. Each surface sets every role:
 
-Semantic aliases:
+| Surface  | `--fg` | `--muted`   | `--line` | `--pop` | `--accent` / `--on-accent` | `--link`    | `--focus`   | `--hero-1` / `--hero-2` |
+| -------- | ------ | ----------- | -------- | ------- | -------------------------- | ----------- | ----------- | ----------------------- |
+| `cream`  | ink    | muted-light | ink      | orange  | orange / ink               | orange-deep | orange-deep | pink / violet           |
+| `white`  | ink    | muted-light | ink      | orange  | orange / ink               | orange-deep | orange-deep | pink / violet           |
+| `night`  | white  | muted-dark  | orange   | orange  | orange / ink               | pink        | orange      | pink / violet           |
+| `ink`    | cream  | muted-dark  | orange   | orange  | orange / ink               | orange      | orange      | pink / violet           |
+| `orange` | ink    | ink         | ink      | white   | white / ink                | ink         | ink         | pink / violet           |
+| `pink`   | ink    | ink         | ink      | white   | orange / ink               | ink         | ink         | violet / white          |
+| `violet` | ink    | ink         | ink      | white   | orange / ink               | ink         | ink         | pink / white            |
 
-| Token      | Points to       | Job                                  |
-| ---------- | --------------- | ------------------------------------ |
-| `--bg`     | `--cream`       | Page background                      |
-| `--fg`     | `--ink`         | Body text                            |
-| `--line`   | `--ink`         | Borders and shadows                  |
-| `--card`   | `--white`       | Card and input surface               |
-| `--accent` | `--orange`      | Primary accent                       |
-| `--muted`  | #55536e         | Secondary text (no primitive behind) |
-| `--focus`  | `--orange-deep` | Focus outline                        |
+`--bg` is the surface's own color. `--pop` is the h1's text shadow, `--accent` the primary button fill with `--on-accent` as its label, `--hero-1` and `--hero-2` the hero button's two layers.
 
-A Vitest test (`web/src/styles/contrast.test.ts`) reads the hex values from `tokens.css` and checks every pair in the Color table, including the "never" pairs below. Add a row there when you add a row here.
+A Vitest test (`web/src/styles/contrast.test.ts`) reads every `[data-surface]` block from `tokens.css` and checks that each declares every role and that `--fg`, `--muted`, `--link` and `--on-accent` (on `--accent`) reach 4.5, and `--line` and `--focus` reach 3, against the surface. A new surface needs no new test, only a new block.
+
+### Palette
+
+Two tiers. The **core palette** makes surfaces and accents:
+
+| Token           | Hex     | Role                                |
+| --------------- | ------- | ----------------------------------- |
+| `--ink`         | #1b1a33 | Text, borders, the footer's surface |
+| `--night`       | #141c4d | Dark surface: Run & Rave            |
+| `--cream`       | #fff7ec | Page surface                        |
+| `--white`       | #ffffff | Card and input surface              |
+| `--orange`      | #f8971c | Primary accent: CTAs, highlights    |
+| `--pink`        | #ff90e8 | Loud surface, hero layer            |
+| `--violet`      | #b05cf8 | Loud surface, hero layer            |
+| `--orange-deep` | #a85500 | Orange as text or link on light     |
+| `--muted-light` | #55536e | Secondary text on light             |
+| `--muted-dark`  | #c9c6e6 | Secondary text on dark              |
+
+`--violet` is #b05cf8, not the requested #ab54f7: ink on #ab54f7 is 4.30, below AA.
+
+The **tag palette** (WIP, values TBD with the client) is for tags and card fills only, never for a surface, and always carries ink text. The test checks each against ink at 4.5.
+
+| Token            | Hex     |
+| ---------------- | ------- |
+| `--tag-lime`     | #c6f36b |
+| `--tag-sky`      | #8fd3ff |
+| `--tag-mint`     | #9ef0c8 |
+| `--tag-lilac`    | #d4b8ff |
+| `--tag-yellow`   | #ffd84d |
+| `--tag-lavender` | #dcd8f0 |
+| `--tag-peach`    | #ffc3a0 |
 
 Rules:
 
-- **Never put white text on orange (2.2) or pink.** Use ink.
-- **Never use plain orange or pink as text on cream** (2.1 and 1.9). Use the `-deep` variants.
-- **No new colors without a contrast check.** A new accent must pass 4.5 with ink or white before it lands.
-- **Three flat steps per accent.** `--{accent}-tint` (light, for surfaces and subtle differentiation), the base color, and `--{accent}-deep` (text on light). No gradients, no blur, no in-between shades. Tint values follow once the palette is agreed with the client.
+- **Polarity.** Light surfaces (cream, white, orange, pink, violet) carry ink text; dark surfaces (night, ink) carry white or cream. Never white on orange (2.2) or pink (2.0), never plain orange as text on cream (2.1).
+- **Cards are white islands.** On a dark or loud surface, a card is white, so its content reads like on cream. A card gets a color fill from the tag palette only when the color carries meaning (a time slot, a category), and only on light surfaces.
+- **No new colors without a contrast check.** A new surface or tag color lands with its block in `tokens.css`, and the test must pass.
 - **Color never carries meaning alone.** Pair it with an icon, a word or a shape.
-- **Dark mode is out of scope for launch.** Tokens stay semantic (`--bg`, `--fg`, `--line`) so it can come later.
-
-Open question: indigo, orange and pink may be one accent too many. Try a version without indigo before launch.
+- **Dark mode is out of scope for launch.** Components read roles, so it can come later as a surface.
 
 ## Shadows and borders
 
-Shadows grow from the pitch's 4px and 7px to a three-step scale, always hard, always ink, always offset down-right.
+Shadow tokens are offsets only. The use site adds the color, so the shadow follows the surface it sits on: `box-shadow: var(--shadow) var(--line)`.
 
-| Token           | Value                    | Use                          |
-| --------------- | ------------------------ | ---------------------------- |
-| `--shadow-sm`   | `4px 4px 0 var(--ink)`   | Buttons, tags, inputs        |
-| `--shadow`      | `8px 8px 0 var(--ink)`   | Cards, sticker cards         |
-| `--shadow-lg`   | `12px 12px 0 var(--ink)` | Hero blocks, featured event  |
-| `--border`      | `3px solid var(--ink)`   | Every card, button and input |
-| `--border-thin` | `2px solid var(--ink)`   | Small chips, table rules     |
+| Token           | Value                  | Use                               |
+| --------------- | ---------------------- | --------------------------------- |
+| `--shadow-sm`   | `4px 4px 0`            | Buttons, tags, inputs             |
+| `--shadow`      | `8px 8px 0`            | Cards, sticker cards              |
+| `--shadow-lg`   | `12px 12px 0`          | Hero blocks, featured event       |
+| `--shadow-pop`  | `0.06em 0.06em 0`      | The h1's text shadow, in `--pop`  |
+| `--border`      | `3px solid var(--ink)` | Every filled card, button and tag |
+| `--border-thin` | `2px solid var(--ink)` | Small chips, table rules          |
 
 Rules:
 
 - **Zero blur, always.** Blurred shadows break the style and cost paint time.
 - **One light source.** Shadows never point up or left.
 - **On mobile, step down one size** (`--shadow-lg` becomes `--shadow`) so offsets don't eat the 16px gutter.
-- **Radius is small or none:** 0 for cards, `--radius-pill` (999px) for pills. Nothing in between.
+- **Borders stay ink** around filled shapes, on every surface: they separate the fill from its shadow. Outlines without a fill (the secondary button) use `--line`.
 
 **Focus states** must look different from hover:
 
-- Use `:focus-visible` with a 3px `--focus` (`--orange-deep`) outline at 3px offset, on top of the normal shadow.
+- Use `:focus-visible` with a 3px `--focus` outline at 3px offset, on top of the normal shadow. Each surface sets its own `--focus`; never override it locally.
 - Never remove an outline without replacing it.
-- The focus ring must stay visible on tilted cards and inside dark indigo bands (use `--orange` there, 4.7 on indigo).
+- The focus ring must stay visible on tilted cards and on every surface.
 
 ## Sticker cards
 
@@ -166,6 +185,14 @@ Layout:
 - `--maxw` (72rem): the widest a content column gets.
 - `--gutter`: the side padding, 16px or the device's safe area, whichever is larger.
 
+Radius has three steps, one per kind of thing:
+
+| Token              | Value  | Use                       |
+| ------------------ | ------ | ------------------------- |
+| `--radius-control` | 0      | Buttons and inputs: sharp |
+| `--radius-card`    | 1.5rem | Cards: very round         |
+| `--radius-tag`     | 999px  | Tags: pill                |
+
 ## Motion and micro-interactions
 
 Motion is small, springy and physical: things press, wiggle and settle. It is CSS-first, with a motion library only for complex cases like dialog enter and exit, and always has a reduced-motion version (library animations included).
@@ -204,9 +231,22 @@ Reusable parts live in `web/src/components/<Name>/`, one folder per component. P
 - **React `.tsx`** for every reusable part, so Storybook can render it. Astro renders it to static HTML at build time.
 - **No `client:*` by default.** Without it a component ships no JavaScript. Hydrate only when a component needs to react to the user after load, and say why next to the directive.
 - **Plain CSS per component** in `<Name>.css`, imported by the component and built only from tokens. No CSS-in-JS, no Tailwind. The root element gets a class named after the component (`.button`, `.heading`).
-- **Variants are `data-*` attributes** named after the prop: `variant="pink"` becomes `data-variant="pink"`, styled as `.button[data-variant="pink"]`. No modifier classes.
+- **Variants are `data-*` attributes** named after the prop: `variant="hero"` becomes `data-variant="hero"`, styled as `.button[data-variant="hero"]`. No modifier classes.
+- **Colors come from roles, never primitives.** A component reads `--fg`, `--line`, `--accent` and so on, so it works on every surface without a color prop. The tag palette is the one exception, through `Card`'s `fill` and `Tag`'s `color`.
 - **Real elements decide behavior.** A component that can act as a link or a button renders `<a href>` or `<button type="button">`, never a `role`.
 - **Every component has stories** in `<Name>.stories.tsx`: one per variant, plus play functions for keyboard use and anything the markup must guarantee. `pnpm test` runs every story in Chromium, and an axe violation fails it.
+
+The building blocks:
+
+- **`Section`** is a full-width band: `surface="night"` renders `<section data-surface="night">` with the content column inside. Give it an accessible name with `aria-labelledby` on its heading.
+- **`Button`** has three variants:
+  - `primary` (default): `--accent` fill, `--on-accent` label, one hard `--line` shadow; lifts on hover, sinks on press.
+  - `secondary`: an outline in `--line`, no shadow; fills with `--line` on hover.
+  - `hero`: the primary plus two layers in `--hero-1` and `--hero-2` that jump out on hover. Under reduced motion the layers still change, but the button doesn't move. At most one per page, for the main call to action.
+- **A hero never sits next to another button.** Next to a hero goes a text link at most (Storybook: Button, "Hero With Text Link"). Primary and secondary pair freely.
+- **`Heading`** level 1 gets one hard text shadow in `--pop`.
+- **`Card`** is an `<article>` with a white body (`data-surface="white"`) inside an ink frame whose `--line` shadow comes from the surface around it: ink on cream, orange on night. `fill` gives the body a tag-palette color, only when the color carries meaning and only on light surfaces.
+- **`Tag`** is a pill with a tag-palette `color`, ink text and a thin ink border, on any surface. The word carries the meaning, the color helps scanning.
 
 Storybook can't use the Astro Fonts API, so `web/.storybook/fonts.css` loads the same WOFF2 files with plain `@font-face` and sets `--font-display` and `--font-text`. Run it with `pnpm --filter web storybook`.
 

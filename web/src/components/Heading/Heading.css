@@ -26,3 +26,8 @@
 .heading[data-size="0"] {
   font-size: var(--step-0);
 }
+
+/* The page title pops off its surface; one hard text shadow in the surface's --pop. */
+h1.heading {
+  text-shadow: var(--shadow-pop) var(--pop);
+}

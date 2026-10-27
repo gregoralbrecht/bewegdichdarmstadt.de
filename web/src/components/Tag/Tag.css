@@ -1,0 +1,31 @@
+/* A pill from the tag palette: always ink text and an ink outline, on any surface. */
+.tag {
+  display: inline-block;
+  padding: 0.15em 0.75em;
+  font: 700 var(--step--1) / 1.4 var(--font-text);
+  color: var(--ink);
+  border: var(--border-thin);
+  border-radius: var(--radius-tag);
+}
+
+.tag[data-color="lime"] {
+  background: var(--tag-lime);
+}
+.tag[data-color="sky"] {
+  background: var(--tag-sky);
+}
+.tag[data-color="mint"] {
+  background: var(--tag-mint);
+}
+.tag[data-color="lilac"] {
+  background: var(--tag-lilac);
+}
+.tag[data-color="yellow"] {
+  background: var(--tag-yellow);
+}
+.tag[data-color="lavender"] {
+  background: var(--tag-lavender);
+}
+.tag[data-color="peach"] {
+  background: var(--tag-peach);
+}

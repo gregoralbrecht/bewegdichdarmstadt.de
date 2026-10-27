@@ -23,3 +23,29 @@ export function contrastRatio(a: string, b: string): number {
   ];
   return (hi + 0.05) / (lo + 0.05);
 }
+
+/**
+ * Reads every `[data-surface="name"] { … }` block from a stylesheet, as surface name to its
+ * `--role: value` declarations. `var(--x)` values resolve through `hexes`; anything else is kept.
+ */
+export function surfaceTokens(
+  css: string,
+  hexes: Map<string, string>,
+): Map<string, Map<string, string>> {
+  const surfaces = new Map<string, Map<string, string>>();
+  const uncommented = css.replace(/\/\*[\s\S]*?\*\//g, "");
+  for (const [, selector, body] of uncommented.matchAll(
+    /([^{}]+)\{([^{}]*)\}/g,
+  )) {
+    const roles = new Map(
+      [...body!.matchAll(/--([\w-]+):\s*([^;]+);/g)].map(([, name, value]) => {
+        const ref = /^var\(--([\w-]+)\)$/.exec(value!.trim());
+        return [name!, (ref && hexes.get(ref[1]!)) ?? value!.trim()];
+      }),
+    );
+    for (const [, name] of selector!.matchAll(/\[data-surface="([\w-]+)"\]/g)) {
+      surfaces.set(name!, roles);
+    }
+  }
+  return surfaces;
+}
