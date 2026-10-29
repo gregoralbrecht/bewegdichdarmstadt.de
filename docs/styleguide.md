@@ -231,6 +231,7 @@ Allowed extras, each used sparingly:
 Reduced motion:
 
 - Under `prefers-reduced-motion: reduce`, keep color and shadow changes, drop movement, rotation animations and marquees. No button moves on hover or press.
+- Buttons still give feedback without moving: hover puts a dotted underline under the label (on devices that can hover), press hides the shadow (on the hero, both layers).
 - Nothing loops forever without a pause control (WCAG 2.2.2).
 - Nothing flashes more than 3 times per second.
 

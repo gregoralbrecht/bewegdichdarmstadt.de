@@ -27,7 +27,8 @@ const face = (button: HTMLElement) =>
 const realBrowser = async () =>
   "__vitest_browser__" in globalThis ? import("vitest/browser") : null;
 
-/** Hovers and presses with reduced motion on and checks the face never moves. */
+/** Hovers and presses with reduced motion on: the face never moves, but hover underlines the label
+    and press hides the shadow (on the hero, both layers). */
 async function staysPutWithReducedMotion(button: HTMLElement) {
   const browser = await realBrowser();
   if (!browser) return;
@@ -36,13 +37,33 @@ async function staysPutWithReducedMotion(button: HTMLElement) {
       features: [{ name: "prefers-reduced-motion", value }],
     });
   const settled = () => new Promise((resolve) => setTimeout(resolve, 300));
+  const layers =
+    button.dataset.variant === "hero" ? ["::before", "::after"] : ["::before"];
+  // Releasing over a link clicks it, and navigating would unload the test runner.
+  const stay = (event: Event) => event.preventDefault();
+  button.addEventListener("click", stay);
   try {
     await reducedMotion("reduce");
     await browser.userEvent.hover(button);
     await settled();
     await expect(getComputedStyle(face(button)).transform).toBe("none");
+    await expect(getComputedStyle(face(button)).textDecorationLine).toBe(
+      "underline",
+    );
+    await expect(getComputedStyle(face(button)).textDecorationStyle).toBe(
+      "dotted",
+    );
+
+    await browser.commands.mouseDown();
+    await expect(button.matches(":active")).toBe(true);
+    await expect(getComputedStyle(face(button)).transform).toBe("none");
+    for (const layer of layers) {
+      await expect(getComputedStyle(button, layer).opacity).toBe("0");
+    }
   } finally {
+    await browser.commands.mouseUp();
     await browser.userEvent.unhover(button);
+    button.removeEventListener("click", stay);
     await reducedMotion("no-preference");
   }
 }

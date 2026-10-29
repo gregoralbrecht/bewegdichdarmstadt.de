@@ -145,4 +145,18 @@
   .button[data-variant="hero"]:active::after {
     transform: translate(calc(2 * var(--depth)), calc(2 * var(--depth)));
   }
+  /* Feedback without movement: hover dots a line under the label, inside the face's bottom padding.
+     At this thickness Chrome draws round dots. */
+  @media (hover: hover) {
+    .button:hover .button__face {
+      text-decoration: underline dotted currentColor round(0.12em, 1px);
+      text-underline-offset: round(0.24em, 1px);
+      text-decoration-skip-ink: none;
+    }
+  }
+  /* Press flattens the button: the shadow goes, the face stays. The hero hides both layers. */
+  .button:active::before,
+  .button[data-variant="hero"]:active::after {
+    opacity: 0;
+  }
 }
