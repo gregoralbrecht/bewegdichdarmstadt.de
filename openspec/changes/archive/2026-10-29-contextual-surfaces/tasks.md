@@ -20,7 +20,7 @@
 
 - [x] 3.1 Make the `Base.astro` footer `data-surface="ink"` and drop its local `--focus` override; verify the footer links pass the focus check on ink and the `site-layout` scenarios still hold
 - [x] 3.2 Add a `robots` prop to `Base.astro` and `web/src/pages/gestaltung.astro` with `noindex`: one section per surface (h1 or h2, body text, link, primary + secondary buttons, a card), a night hero with the hero button, a festival-style cream section with colored time-slot cards, and a tag palette row marked WIP; verify at 320px and desktop width that nothing scrolls sideways, keyboard focus is visible on every surface, and axe reports no issues
-- [ ] 3.3 Verify `pnpm format:check`, `pnpm lint`, `pnpm check`, `pnpm test` and `pnpm build` pass, then after the user confirms the push, verify the deploy is green and `/gestaltung` is live
+- [x] 3.3 Verify `pnpm format:check`, `pnpm lint`, `pnpm check`, `pnpm test` and `pnpm build` pass, then after the user confirms the push, verify the deploy is green and `/gestaltung` is live
 
 ## Log
 
