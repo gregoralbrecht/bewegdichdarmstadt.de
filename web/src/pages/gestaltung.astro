@@ -50,9 +50,8 @@ const slots = [
       </p>
       <p class="actions">
         <Button variant="hero" href="#flaechen">
-          Flächen ansehen
+          Alle Flächen der Reihe nach ansehen
         </Button>
-        <a href="#tags">Zur Tag-Palette</a>
       </p>
     </div>
   </Section>
@@ -116,6 +115,11 @@ const slots = [
               </p>
               <Heading level={3}>{title}</Heading>
               <Tag color={fill}>{kind}</Tag>
+              <p class="card-actions">
+                <Button size="small" href="#festival">
+                  Kalender
+                </Button>
+              </p>
             </Card>
           </li>
         ))}
@@ -193,6 +197,9 @@ const slots = [
     font-weight: 800;
     font-size: var(--step-2);
     margin: 0 0 var(--space-2);
+  }
+  .card-actions {
+    margin: var(--space-4) 0 0;
   }
   .tags {
     display: flex;

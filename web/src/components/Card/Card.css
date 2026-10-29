@@ -1,7 +1,9 @@
 /* A white island on any surface: the outer frame reads --line from the parent surface, so the
-   shadow is ink on cream and orange on night, while the body is always white inside. */
+   shadow is ink on cream and orange on night, while the body is always white inside. The frame's own
+   background fills the antialiased seam between the body's rounded corner and the border. */
 .card {
-  border: var(--border);
+  background: var(--line);
+  border: var(--border) solid var(--line);
   border-radius: var(--radius-card);
   box-shadow: var(--shadow) var(--line);
 }

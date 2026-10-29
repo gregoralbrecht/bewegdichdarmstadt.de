@@ -30,9 +30,10 @@
   --shadow: 8px 8px 0;
   --shadow-lg: 12px 12px 0;
   --shadow-pop: 0.06em 0.06em 0;
-  /* Borders outline filled shapes (buttons, cards, tags) and stay ink on every surface. */
-  --border: 3px solid var(--ink);
-  --border-thin: 2px solid var(--ink);
+  /* Border widths. The use site adds the color (`var(--border) solid var(--line)`), so a border
+     matches the shadow it extrudes into on every surface. */
+  --border: 3px;
+  --border-thin: 2px;
   --radius-control: 0;
   --radius-card: 1.5rem;
   --radius-tag: 999px;
@@ -81,6 +82,7 @@
   --focus: var(--orange-deep);
   --hero-1: var(--pink);
   --hero-2: var(--violet);
+  --hero-ink: var(--line);
   background: var(--bg);
   color: var(--fg);
 }
@@ -97,6 +99,7 @@
   --focus: var(--orange-deep);
   --hero-1: var(--pink);
   --hero-2: var(--violet);
+  --hero-ink: var(--line);
   background: var(--bg);
   color: var(--fg);
 }
@@ -107,12 +110,13 @@
   --muted: var(--muted-dark);
   --line: var(--orange);
   --pop: var(--orange);
-  --accent: var(--orange);
+  --accent: var(--cream);
   --on-accent: var(--ink);
   --link: var(--pink);
   --focus: var(--orange);
   --hero-1: var(--pink);
   --hero-2: var(--violet);
+  --hero-ink: transparent;
   background: var(--bg);
   color: var(--fg);
 }
@@ -123,12 +127,13 @@
   --muted: var(--muted-dark);
   --line: var(--orange);
   --pop: var(--orange);
-  --accent: var(--orange);
+  --accent: var(--cream);
   --on-accent: var(--ink);
   --link: var(--orange);
   --focus: var(--orange);
   --hero-1: var(--pink);
   --hero-2: var(--violet);
+  --hero-ink: transparent;
   background: var(--bg);
   color: var(--fg);
 }
@@ -145,6 +150,7 @@
   --focus: var(--ink);
   --hero-1: var(--pink);
   --hero-2: var(--violet);
+  --hero-ink: var(--line);
   background: var(--bg);
   color: var(--fg);
 }
@@ -161,6 +167,7 @@
   --focus: var(--ink);
   --hero-1: var(--violet);
   --hero-2: var(--white);
+  --hero-ink: var(--line);
   background: var(--bg);
   color: var(--fg);
 }
@@ -177,6 +184,7 @@
   --focus: var(--ink);
   --hero-1: var(--pink);
   --hero-2: var(--white);
+  --hero-ink: var(--line);
   background: var(--bg);
   color: var(--fg);
 }

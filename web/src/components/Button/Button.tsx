@@ -17,18 +17,35 @@ type ButtonProps = Common &
 export type Props = LinkProps | ButtonProps;
 
 /** A link that looks like a button when given `href`, a real `<button>` otherwise. */
-export function Button({ variant = "primary", size, ...props }: Props) {
+export function Button({
+  variant = "primary",
+  size,
+  children,
+  ...props
+}: Props) {
   const data = { "data-variant": variant, "data-size": size };
+  // The outer element stays put and draws the shadow; only the face moves.
+  const face = <span className="button__face">{children}</span>;
 
   if (props.href !== undefined) {
-    return <a className="button" {...data} {...(props as LinkProps)} />;
+    return (
+      <a
+        className="button"
+        {...data}
+        {...(props as Omit<LinkProps, keyof Common>)}
+      >
+        {face}
+      </a>
+    );
   }
   return (
     <button
       type="button"
       className="button"
       {...data}
-      {...(props as ButtonProps)}
-    />
+      {...(props as Omit<ButtonProps, keyof Common>)}
+    >
+      {face}
+    </button>
   );
 }

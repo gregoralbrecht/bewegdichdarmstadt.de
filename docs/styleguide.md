@@ -34,19 +34,19 @@ The quality bar sits above all four. When style and quality conflict, quality wi
 
 A section picks one surface with `data-surface` (the `Section` component's `surface` prop), and everything inside follows. The page itself is cream. Each surface sets every role:
 
-| Surface  | `--fg` | `--muted`   | `--line` | `--pop` | `--accent` / `--on-accent` | `--link`    | `--focus`   | `--hero-1` / `--hero-2` |
-| -------- | ------ | ----------- | -------- | ------- | -------------------------- | ----------- | ----------- | ----------------------- |
-| `cream`  | ink    | muted-light | ink      | orange  | orange / ink               | orange-deep | orange-deep | pink / violet           |
-| `white`  | ink    | muted-light | ink      | orange  | orange / ink               | orange-deep | orange-deep | pink / violet           |
-| `night`  | white  | muted-dark  | orange   | orange  | orange / ink               | pink        | orange      | pink / violet           |
-| `ink`    | cream  | muted-dark  | orange   | orange  | orange / ink               | orange      | orange      | pink / violet           |
-| `orange` | ink    | ink         | ink      | white   | white / ink                | ink         | ink         | pink / violet           |
-| `pink`   | ink    | ink         | ink      | white   | orange / ink               | ink         | ink         | violet / white          |
-| `violet` | ink    | ink         | ink      | white   | orange / ink               | ink         | ink         | pink / white            |
+| Surface  | `--fg` | `--muted`   | `--line` | `--pop` | `--accent` / `--on-accent` | `--link`    | `--focus`   | `--hero-1` / `--hero-2` | `--hero-ink` |
+| -------- | ------ | ----------- | -------- | ------- | -------------------------- | ----------- | ----------- | ----------------------- | ------------ |
+| `cream`  | ink    | muted-light | ink      | orange  | orange / ink               | orange-deep | orange-deep | pink / violet           | `--line`     |
+| `white`  | ink    | muted-light | ink      | orange  | orange / ink               | orange-deep | orange-deep | pink / violet           | `--line`     |
+| `night`  | white  | muted-dark  | orange   | orange  | cream / ink                | pink        | orange      | pink / violet           | transparent  |
+| `ink`    | cream  | muted-dark  | orange   | orange  | cream / ink                | orange      | orange      | pink / violet           | transparent  |
+| `orange` | ink    | ink         | ink      | white   | white / ink                | ink         | ink         | pink / violet           | `--line`     |
+| `pink`   | ink    | ink         | ink      | white   | orange / ink               | ink         | ink         | violet / white          | `--line`     |
+| `violet` | ink    | ink         | ink      | white   | orange / ink               | ink         | ink         | pink / white            | `--line`     |
 
-`--bg` is the surface's own color. `--pop` is the h1's text shadow, `--accent` the primary button fill with `--on-accent` as its label, `--hero-1` and `--hero-2` the hero button's two layers.
+`--bg` is the surface's own color. `--line` draws the borders and shadows of filled shapes. `--pop` is the h1's text shadow, `--accent` the primary button fill with `--on-accent` as its label, `--hero-1` and `--hero-2` the hero button's two layers, and `--hero-ink` their edges: `--line` on light surfaces, transparent on dark ones, so the stack goes flat there like the two-tone heading. On dark surfaces `--accent` is cream, because an orange button would merge with its orange line.
 
-A Vitest test (`web/src/styles/contrast.test.ts`) reads every `[data-surface]` block from `tokens.css` and checks that each declares every role and that `--fg`, `--muted`, `--link` and `--on-accent` (on `--accent`) reach 4.5, and `--line` and `--focus` reach 3, against the surface. A new surface needs no new test, only a new block.
+A Vitest test (`web/src/styles/contrast.test.ts`) reads every `[data-surface]` block from `tokens.css` and checks that each declares every role and that `--fg`, `--muted`, `--link` and `--on-accent` (on `--accent`) reach 4.5, and `--line` and `--focus` reach 3, against the surface. It also checks that `--accent` differs from `--line`, and that no role but `--hero-ink` is transparent. A new surface needs no new test, only a new block.
 
 ### Palette
 
@@ -89,27 +89,28 @@ Rules:
 
 ## Shadows and borders
 
-Shadow tokens are offsets only. The use site adds the color, so the shadow follows the surface it sits on: `box-shadow: var(--shadow) var(--line)`.
+Shadow tokens are offsets only and border tokens are widths only. The use site adds the color, so both follow the surface they sit on: `box-shadow: var(--shadow) var(--line)`, `border: var(--border) solid var(--line)`. A color inside a `:root` token would resolve once at the root and stay ink everywhere.
 
-| Token           | Value                  | Use                               |
-| --------------- | ---------------------- | --------------------------------- |
-| `--shadow-sm`   | `4px 4px 0`            | Buttons, tags, inputs             |
-| `--shadow`      | `8px 8px 0`            | Cards, sticker cards              |
-| `--shadow-lg`   | `12px 12px 0`          | Hero blocks, featured event       |
-| `--shadow-pop`  | `0.06em 0.06em 0`      | The h1's text shadow, in `--pop`  |
-| `--border`      | `3px solid var(--ink)` | Every filled card, button and tag |
-| `--border-thin` | `2px solid var(--ink)` | Small chips, table rules          |
+| Token           | Value             | Use                               |
+| --------------- | ----------------- | --------------------------------- |
+| `--shadow-sm`   | `4px 4px 0`       | Buttons, tags, inputs             |
+| `--shadow`      | `8px 8px 0`       | Cards, sticker cards              |
+| `--shadow-lg`   | `12px 12px 0`     | Hero blocks, featured event       |
+| `--shadow-pop`  | `0.06em 0.06em 0` | The h1's text shadow, in `--pop`  |
+| `--border`      | `3px`             | Every filled card, button and tag |
+| `--border-thin` | `2px`             | Small chips, table rules          |
 
 Rules:
 
 - **Zero blur, always.** Blurred shadows break the style and cost paint time.
 - **One light source.** Shadows never point up or left.
 - **On mobile, step down one size** (`--shadow-lg` becomes `--shadow`) so offsets don't eat the 16px gutter.
-- **Borders stay ink** around filled shapes, on every surface: they separate the fill from its shadow. Outlines without a fill (the secondary button) use `--line`.
+- **Borders follow `--line`,** like the shadow they extrude into: ink on light surfaces, orange on dark ones. A border in another color than its shadow reads as a seam. `Tag` is the exception and keeps an ink outline on every surface.
+- **A fill never matches its line.** That is why `--accent` is cream on dark surfaces.
 
 **Focus states** must look different from hover:
 
-- Use `:focus-visible` with a 3px `--focus` outline at 3px offset, on top of the normal shadow. Each surface sets its own `--focus`; never override it locally.
+- Use `:focus-visible` with a 3px `--focus` outline at 3px offset, on top of the normal shadow (on a button, around its face). Each surface sets its own `--focus`; never override it locally.
 - Never remove an outline without replacing it.
 - The focus ring must stay visible on tilted cards and on every surface.
 
@@ -140,10 +141,10 @@ Markup:
 
 Two self-hosted fonts from the pitch: **Bricolage Grotesque** for display, **Figtree** for text. The files live in `web/src/assets/fonts/` and come in through the Astro Fonts API, which generates a metric-matched fallback face for each so the layout doesn't jump while fonts load.
 
-| Token            | Font                      | Use                                |
-| ---------------- | ------------------------- | ---------------------------------- |
-| `--font-display` | Bricolage, then system-ui | Headings, card titles, big numbers |
-| `--font-text`    | Figtree, then system-ui   | Body, UI, forms                    |
+| Token            | Font                      | Use                                         |
+| ---------------- | ------------------------- | ------------------------------------------- |
+| `--font-display` | Bricolage, then system-ui | Headings, card titles, big numbers, buttons |
+| `--font-text`    | Figtree, then system-ui   | Body, UI, forms                             |
 
 Rules:
 
@@ -197,7 +198,7 @@ Radius has three steps, one per kind of thing:
 
 Motion is small, springy and physical: things press, wiggle and settle. It is CSS-first, with a motion library only for complex cases like dialog enter and exit, and always has a reduced-motion version (library animations included).
 
-The core pattern is the **press**:
+The core pattern is the **press**. For cards:
 
 | State          | Transform               | Shadow                        |
 | -------------- | ----------------------- | ----------------------------- |
@@ -205,6 +206,15 @@ The core pattern is the **press**:
 | Hover          | `translate(-2px, -2px)` | 10px                          |
 | Active (press) | `translate(8px, 8px)`   | 0                             |
 | Focus-visible  | none                    | `--shadow` plus focus outline |
+
+Buttons press in `em`, so the shadow grows with the label, each value rounded to whole pixels with `round(…, 1px)`. The shadow stays put; only the face moves:
+
+| State          | Face transform                | Shadow offset                  |
+| -------------- | ----------------------------- | ------------------------------ |
+| Rest           | none                          | 0.16em (small: 0.22em)         |
+| Hover          | up-left by half the offset    | unchanged                      |
+| Active (press) | down-right by the full offset | unchanged; the face covers it  |
+| Focus-visible  | none                          | unchanged, outline on the face |
 
 Timing:
 
@@ -220,7 +230,7 @@ Allowed extras, each used sparingly:
 
 Reduced motion:
 
-- Under `prefers-reduced-motion: reduce`, keep color and shadow changes, drop movement, rotation animations and marquees.
+- Under `prefers-reduced-motion: reduce`, keep color and shadow changes, drop movement, rotation animations and marquees. No button moves on hover or press.
 - Nothing loops forever without a pause control (WCAG 2.2.2).
 - Nothing flashes more than 3 times per second.
 
@@ -239,13 +249,15 @@ Reusable parts live in `web/src/components/<Name>/`, one folder per component. P
 The building blocks:
 
 - **`Section`** is a full-width band: `surface="night"` renders `<section data-surface="night">` with the content column inside. Give it an accessible name with `aria-labelledby` on its heading.
-- **`Button`** has three variants:
-  - `primary` (default): `--accent` fill, `--on-accent` label, one hard `--line` shadow; lifts on hover, sinks on press.
-  - `secondary`: an outline in `--line`, no shadow; fills with `--line` on hover.
-  - `hero`: the primary plus two layers in `--hero-1` and `--hero-2` that jump out on hover. Under reduced motion the layers still change, but the button doesn't move. At most one per page, for the main call to action.
-- **A hero never sits next to another button.** Next to a hero goes a text link at most (Storybook: Button, "Hero With Text Link"). Primary and secondary pair freely.
+- **`Button`** is a static link or `<button>` that draws the shadow, with a `.button__face` inside that is the only part that moves. Labels are Bricolage. It has three variants:
+  - `primary` (default): `--accent` fill, `--on-accent` label, `--line` border and shadow; lifts on hover, sinks on press.
+  - `secondary`: rises and presses like the primary, filled with the surface's `--bg` so it looks hollow, `--fg` label, one type step smaller.
+  - `hero`: the primary plus two layers in `--hero-1` and `--hero-2`, edged in `--hero-ink`; on hover the second layer jumps out. Always `--step-3`. At most one per page, for the main call to action.
+- **Sizes.** The default is `--step-2` (secondary `--step-1`); `size="small"` is `--step-0` (secondary `--step--1`), for card actions. Two secondaries side by side are therefore equal.
+- **Buttons fit their column.** A button and its shadow are never wider than the column; long labels wrap with hyphenation, never truncate. Every button's hit area is at least 44px tall.
+- **A hero never sits next to another button.** Primary and secondary pair freely.
 - **`Heading`** level 1 gets one hard text shadow in `--pop`.
-- **`Card`** is an `<article>` with a white body (`data-surface="white"`) inside an ink frame whose `--line` shadow comes from the surface around it: ink on cream, orange on night. `fill` gives the body a tag-palette color, only when the color carries meaning and only on light surfaces.
+- **`Card`** is an `<article>` with a white body (`data-surface="white"`) inside a frame whose `--line` border and shadow come from the surface around it: ink on cream, orange on night. `fill` gives the body a tag-palette color, only when the color carries meaning and only on light surfaces.
 - **`Tag`** is a pill with a tag-palette `color`, ink text and a thin ink border, on any surface. The word carries the meaning, the color helps scanning.
 
 Storybook can't use the Astro Fonts API, so `web/.storybook/fonts.css` loads the same WOFF2 files with plain `@font-face` and sets `--font-display` and `--font-text`. Run it with `pnpm --filter web storybook`.

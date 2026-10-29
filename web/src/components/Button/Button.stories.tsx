@@ -20,6 +20,33 @@ const on =
     </div>
   );
 
+const face = (button: HTMLElement) =>
+  button.querySelector<HTMLElement>(".button__face")!;
+
+/** Vitest's real browser, or null in Storybook, whose userEvent can't trigger :hover or emulate media. */
+const realBrowser = async () =>
+  "__vitest_browser__" in globalThis ? import("vitest/browser") : null;
+
+/** Hovers and presses with reduced motion on and checks the face never moves. */
+async function staysPutWithReducedMotion(button: HTMLElement) {
+  const browser = await realBrowser();
+  if (!browser) return;
+  const reducedMotion = (value: "reduce" | "no-preference") =>
+    browser.cdp().send("Emulation.setEmulatedMedia", {
+      features: [{ name: "prefers-reduced-motion", value }],
+    });
+  const settled = () => new Promise((resolve) => setTimeout(resolve, 300));
+  try {
+    await reducedMotion("reduce");
+    await browser.userEvent.hover(button);
+    await settled();
+    await expect(getComputedStyle(face(button)).transform).toBe("none");
+  } finally {
+    await browser.userEvent.unhover(button);
+    await reducedMotion("no-preference");
+  }
+}
+
 export const Primary: Story = {
   decorators: [on("cream")],
   play: async ({ args, canvas }) => {
@@ -28,11 +55,39 @@ export const Primary: Story = {
 
     await userEvent.tab();
     await expect(button).toHaveFocus();
-    await expect(getComputedStyle(button).outlineStyle).toBe("solid");
+    await expect(getComputedStyle(face(button)).outlineStyle).toBe("solid");
 
     await userEvent.keyboard("{Enter}");
     await userEvent.keyboard(" ");
     await expect(args.onClick).toHaveBeenCalledTimes(2);
+  },
+};
+
+/** The pointer rests on the bottom-right edge while the face lifts away from it. */
+export const Hover: Story = {
+  args: { href: "#programm", children: "Zum Programm" },
+  decorators: [on("cream")],
+  play: async ({ canvas }) => {
+    const link = canvas.getByRole("link", { name: "Zum Programm" });
+    const browser = await realBrowser();
+    if (!browser) return;
+
+    const rest = link.getBoundingClientRect().toJSON();
+    try {
+      await browser.userEvent.hover(link, {
+        position: { x: rest.width - 2, y: rest.height - 2 },
+      });
+      await waitFor(() =>
+        expect(
+          new DOMMatrix(getComputedStyle(face(link)).transform).m41,
+        ).toBeLessThan(0),
+      );
+      await expect(link.matches(":hover")).toBe(true);
+      await expect(link.getBoundingClientRect().toJSON()).toEqual(rest);
+    } finally {
+      await browser.userEvent.unhover(link);
+    }
+    await staysPutWithReducedMotion(link);
   },
 };
 
@@ -60,34 +115,20 @@ export const Hero: Story = {
   decorators: [on("cream")],
   play: async ({ canvas }) => {
     const hero = canvas.getByRole("link", { name: "Mitmachen" });
-    // Storybook's userEvent can't trigger :hover or emulate media; pnpm test runs this part with
-    // Vitest's real browser events.
-    if (!("__vitest_browser__" in globalThis)) return;
-    const browser = await import("vitest/browser");
-    const reducedMotion = (value: "reduce" | "no-preference") =>
-      browser.cdp().send("Emulation.setEmulatedMedia", {
-        features: [{ name: "prefers-reduced-motion", value }],
-      });
+    const browser = await realBrowser();
+    if (!browser) return;
 
-    const rest = getComputedStyle(hero).boxShadow;
     try {
       await browser.userEvent.hover(hero);
       await waitFor(() =>
-        expect(getComputedStyle(hero).transform).toBe(
-          "matrix(1, 0, 0, 1, -6, -6)",
-        ),
+        expect(
+          new DOMMatrix(getComputedStyle(face(hero)).transform).m41,
+        ).toBeLessThan(0),
       );
-      await browser.userEvent.unhover(hero);
-
-      await reducedMotion("reduce");
-      await browser.userEvent.hover(hero);
-      await expect(getComputedStyle(hero).transform).toBe("none");
-      // The layers still change, only the movement goes.
-      await expect(getComputedStyle(hero).boxShadow).not.toBe(rest);
     } finally {
       await browser.userEvent.unhover(hero);
-      await reducedMotion("no-preference");
     }
+    await staysPutWithReducedMotion(hero);
   },
 };
 
@@ -103,29 +144,41 @@ export const HeroOnOrange: Story = {
   decorators: [on("orange")],
 };
 
-/** The allowed pairing: a hero never sits next to another button, only next to a text link. */
-export const HeroWithTextLink: Story = {
-  args: { variant: "hero", href: "#mitmachen", children: "Mitmachen" },
-  decorators: [on("night")],
+/** The spec's phone case: a 320px viewport with 16px gutters, and a label too long for one line. */
+export const HeroLongLabel: Story = {
+  args: {
+    variant: "hero",
+    href: "#mitmachen",
+    children: "Jetzt kostenlos beim Lauftreff anmelden",
+  },
+  decorators: [on("cream")],
   render: (args) => (
-    <p
-      style={{
-        display: "flex",
-        flexWrap: "wrap",
-        alignItems: "center",
-        gap: "var(--space-6)",
-        margin: 0,
-      }}
-    >
+    <div data-testid="column" style={{ width: "320px", paddingInline: "16px" }}>
       <Button {...args} />
-      <a href="#programm">Erst das Programm ansehen</a>
-    </p>
+    </div>
   ),
+  play: async ({ canvas }) => {
+    const column = canvas.getByTestId("column");
+    await expect(column.scrollWidth).toBeLessThanOrEqual(column.clientWidth);
+    const hero = face(canvas.getByRole("link"));
+    await expect(hero.scrollWidth).toBeLessThanOrEqual(hero.clientWidth);
+  },
 };
 
 export const Small: Story = {
   args: { size: "small" },
   decorators: [on("cream")],
+  play: async ({ canvas }) => {
+    // The hit area reaches 22px above and below the middle, whatever the face's height.
+    const button = canvas.getByRole("button");
+    const { left, width, top, height } = button.getBoundingClientRect();
+    const [x, y] = [left + width / 2, top + height / 2];
+    for (const dy of [-21.5, 21.5]) {
+      await expect(
+        document.elementFromPoint(x, y + dy)?.closest(".button"),
+      ).toBe(button);
+    }
+  },
 };
 
 export const Link: Story = {
