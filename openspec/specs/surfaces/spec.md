@@ -23,11 +23,20 @@ On every surface, borders, hard shadows and the keyboard focus outline SHALL hav
 - **WHEN** a keyboard user tabs to a link inside a night section
 - **THEN** the focus outline has a contrast ratio of at least 3:1 against the night background
 
-### Requirement: Hero button respects reduced motion
+### Requirement: Buttons respect reduced motion
 
-When the visitor prefers reduced motion, the hero button SHALL NOT move on hover or press.
+When the visitor prefers reduced motion, no button SHALL move on hover or press.
 
 #### Scenario: Hover with reduced motion
 
-- **WHEN** a visitor with `prefers-reduced-motion: reduce` hovers or presses the hero button
+- **WHEN** a visitor with `prefers-reduced-motion: reduce` hovers or presses the hero button or any other button
 - **THEN** the button stays in place
+
+### Requirement: Button fill differs from its line
+
+On every surface, a filled button's fill color SHALL differ from the color of its border and shadow, so the button never merges with its shadow.
+
+#### Scenario: Primary button on night
+
+- **WHEN** a primary button sits in a night section, where borders and shadows are orange
+- **THEN** its fill is not orange
