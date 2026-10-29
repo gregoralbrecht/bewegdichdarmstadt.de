@@ -1,0 +1,197 @@
+/* The menu's geometry, and the room the page keeps free for it. Base.astro reserves --menu-row in
+   the header and the --menu-room-* values as scroll padding and footer padding, so nothing it
+   covers can be hidden behind it. The breakpoint (66em) is repeated in MainMenu.tsx's noscript. */
+:root {
+  /* Every link is at least 44px tall; in rem so it grows with the user's font size. */
+  --menu-link: max(44px, 2.5rem);
+  /* The cream die-cut edge around the card and its shadow. */
+  --menu-cut: 6px;
+  --menu-top: var(--space-5);
+  --menu-bottom: calc(var(--space-5) + env(safe-area-inset-bottom));
+  --menu-height: calc(
+    2 * var(--border) + 2 * var(--space-2) + var(--menu-link)
+  );
+  /* How far the shadow (8px, from --shadow) and the cut reach past the card. */
+  --menu-reach: calc(8px + var(--menu-cut));
+  --menu-row: 0px;
+  --menu-room-top: 0px;
+  --menu-room-bottom: calc(
+    var(--menu-bottom) + var(--menu-height) + var(--menu-reach) + var(--space-3)
+  );
+  /* The noscript fallback's inline bar, which wraps to two rows on phones. */
+  --menu-room-bottom-inline: calc(
+    var(--menu-bottom) + var(--menu-height) + var(--menu-link) +
+      var(--space-2) + var(--menu-reach) + var(--space-3)
+  );
+}
+
+@media (width >= 66em) {
+  :root {
+    --menu-row: var(--menu-height);
+    --menu-room-top: calc(
+      var(--menu-top) + var(--menu-height) + var(--menu-reach) + var(--space-3)
+    );
+    --menu-room-bottom: 0px;
+  }
+}
+
+/* The card at the top and the bar at the bottom: white sticker cards, fixed and centered. The cream
+   rings follow the card and its shadow, so ink meets cream and cream meets night or ink: the edge
+   reaches 3:1 over every surface. Cream is a primitive here on purpose, like Tag's ink outline. */
+.main-menu__card,
+.main-menu__bar {
+  position: fixed;
+  z-index: 10;
+  inset-inline: 0;
+  width: fit-content;
+  max-width: calc(100% - 2 * var(--gutter));
+  margin-inline: auto;
+  padding: var(--space-2);
+  border: var(--border) solid var(--line);
+  border-radius: var(--radius-card);
+  box-shadow:
+    var(--shadow) var(--line),
+    0 0 0 var(--menu-cut) var(--cream),
+    var(--shadow) var(--menu-cut) var(--cream);
+  transition:
+    transform var(--dur-slow) var(--ease-spring),
+    opacity var(--dur);
+}
+
+.main-menu__card {
+  display: none;
+  top: var(--menu-top);
+}
+
+.main-menu__bar {
+  bottom: var(--menu-bottom);
+}
+
+@media (width >= 66em) {
+  .main-menu__card {
+    display: block;
+  }
+  .main-menu__bar {
+    display: none;
+  }
+}
+
+/* main-menu.ts sets data-menu="hidden" while scrolling down; without it nothing ever hides. Focus
+   inside brings the menu back, and a hidden menu never catches a click meant for the page. */
+.main-menu[data-menu="hidden"]:not(:focus-within) .main-menu__card,
+.main-menu[data-menu="hidden"]:not(:focus-within) .main-menu__bar {
+  pointer-events: none;
+}
+.main-menu[data-menu="hidden"]:not(:focus-within) .main-menu__card {
+  transform: translateY(
+    calc(-100% - var(--menu-top) - var(--menu-reach) - var(--border))
+  );
+}
+.main-menu[data-menu="hidden"]:not(:focus-within) .main-menu__bar {
+  transform: translateY(calc(100% + var(--menu-bottom) + var(--menu-reach)));
+}
+
+.main-menu__list {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: var(--space-2);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+/* Links and the sheet's buttons. Straight, never tilted. The border is transparent until hover or
+   the current page, so the label never shifts. */
+.main-menu__link {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-block-size: var(--menu-link);
+  padding: 0 var(--space-3);
+  font: 800 var(--step-0) / 1.2 var(--font-display);
+  letter-spacing: -0.01em;
+  color: var(--fg);
+  text-decoration: none;
+  cursor: pointer;
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
+  background: none;
+  border: var(--border) solid transparent;
+  /* Concentric with the card's corner. */
+  border-radius: calc(var(--radius-card) - var(--space-2) - var(--border));
+  transition: transform var(--dur) var(--ease-spring);
+}
+
+@media (hover: hover) {
+  .main-menu__link:hover:not([aria-current]) {
+    border-color: var(--line);
+    box-shadow: var(--shadow-sm) var(--line);
+    transform: translate(-2px, -2px);
+  }
+}
+
+.main-menu__link:active:not([aria-current]) {
+  border-color: var(--line);
+  box-shadow: none;
+  transform: translate(2px, 2px);
+  transition-duration: var(--dur-fast);
+}
+
+/* The current page is pressed in: filled, edged, no shadow. The edge and fill change its shape,
+   not only its color. */
+.main-menu__link[aria-current="page"] {
+  background: var(--accent);
+  color: var(--on-accent);
+  border-color: var(--line);
+}
+
+/* The bottom sheet: full width, flush with the window's bottom edge, links stacked big. */
+.main-menu__sheet {
+  inset-block: auto 0;
+  width: 100%;
+  max-width: none;
+  max-height: calc(100% - var(--space-7));
+  margin: 0;
+  padding: var(--space-5) var(--gutter)
+    calc(var(--space-5) + env(safe-area-inset-bottom));
+  color: var(--fg);
+  background: var(--bg);
+  border: var(--border) solid var(--line);
+  border-bottom: 0;
+  border-radius: var(--radius-card) var(--radius-card) 0 0;
+}
+.main-menu__sheet::backdrop {
+  background: color-mix(in srgb, var(--line) 60%, transparent);
+}
+.main-menu__sheet .main-menu__list {
+  flex-direction: column;
+}
+.main-menu__sheet .main-menu__link {
+  justify-content: flex-start;
+  font-size: var(--step-2);
+}
+.main-menu__close {
+  width: 100%;
+  margin-top: var(--space-4);
+  border-color: var(--line);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .main-menu__card,
+  .main-menu__bar {
+    transition: opacity var(--dur);
+  }
+  .main-menu[data-menu="hidden"]:not(:focus-within) .main-menu__card,
+  .main-menu[data-menu="hidden"]:not(:focus-within) .main-menu__bar {
+    transform: none;
+    opacity: 0;
+  }
+  .main-menu__link {
+    transition: none;
+  }
+  .main-menu__link:hover:not([aria-current]),
+  .main-menu__link:active:not([aria-current]) {
+    transform: none;
+  }
+}

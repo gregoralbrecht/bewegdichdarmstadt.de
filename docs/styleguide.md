@@ -260,6 +260,12 @@ The building blocks:
 - **`Heading`** level 1 gets one hard text shadow in `--pop`.
 - **`Card`** is an `<article>` with a white body (`data-surface="white"`) inside a frame whose `--line` border and shadow come from the surface around it: ink on cream, orange on night. `fill` gives the body a tag-palette color, only when the color carries meaning and only on light surfaces.
 - **`Tag`** is a pill with a tag-palette `color`, ink text and a thin ink border, on any surface. The word carries the meaning, the color helps scanning.
+- **`MainMenu`** is the main navigation in `Base.astro`'s header, built from the list in `web/src/lib/menu.ts`. To add a page to the menu, add an item there; both lists below pick it up.
+  - From `66em` (wide enough for the logo beside it): a white sticker card (`data-surface="white"`, `--border`, `--shadow`, `--radius-card`), fixed and centered at the top. It never tilts. A `--menu-cut` ring in cream wraps the card and its shadow like a die-cut sticker, so the edge reaches 3:1 over every surface: ink meets cream, cream meets night and ink. Cream is a primitive here on purpose.
+  - Below `66em`: a "Menü" button in the same card at the bottom edge (above the safe area) opens a `<dialog>` bottom sheet with the same links, through invoker commands (`commandfor`, `command`). Escape, "Schließen" or a tap outside close it, and focus returns to "Menü".
+  - The current page has `aria-current="page"` and is drawn pressed in: `--accent` fill, `--line` edge, no shadow.
+  - It hides while scrolling down and comes back on scroll up, near the top of the page and whenever focus is inside it. Under reduced motion it fades instead of sliding. A small script sets `data-menu="hidden"`; without JavaScript the menu never hides, and phones show the links inline in the bottom bar instead of the button.
+  - `MainMenu.css` publishes the room the menu needs (`--menu-row`, `--menu-room-top`, `--menu-room-bottom`); `Base.astro` reserves it as header height, scroll padding and footer padding, so the menu never covers a focused element or the footer.
 
 Storybook can't use the Astro Fonts API, so `web/.storybook/fonts.css` loads the same WOFF2 files with plain `@font-face` and sets `--font-display` and `--font-text`. Run it with `pnpm --filter web storybook`.
 

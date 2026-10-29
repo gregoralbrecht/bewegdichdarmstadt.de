@@ -1,6 +1,7 @@
 ---
 import { Font } from "astro:assets";
 import { Logo } from "../components/Logo/Logo";
+import { MainMenu } from "../components/MainMenu/MainMenu";
 import { pageTitle } from "../lib/page-title";
 import "../styles/tokens.css";
 
@@ -29,6 +30,7 @@ const { title, robots } = Astro.props;
     </a>
     <header class="wrap">
       <Logo />
+      <MainMenu current={Astro.url.pathname} />
     </header>
     <main id="main">
       <slot />
@@ -55,11 +57,17 @@ const { title, robots } = Astro.props;
   </body>
 </html>
 
+<script>
+  import "../components/MainMenu/main-menu";
+</script>
+
 <style>
   /* The footer sits at the window's bottom edge on short pages. Percent heights, not vh/svh/dvh, which
      mobile browsers resolve inconsistently. */
   html {
     height: 100%;
+    /* Keeps focused elements and anchor targets clear of the fixed menu. */
+    scroll-padding-block: var(--menu-room-top) var(--menu-room-bottom);
   }
   body {
     min-height: 100%;
@@ -92,12 +100,17 @@ const { title, robots } = Astro.props;
     transform: none;
   }
 
+  /* The logo stays in normal flow; the row is as tall as the fixed menu card, so the two line up. */
   header {
+    display: flex;
+    align-items: center;
+    min-height: calc(var(--menu-row) + 2 * var(--space-5));
     padding-block: var(--space-5);
   }
 
+  /* On phones the footer runs on under the bottom bar, so the bar never covers its links. */
   footer {
-    padding-block: var(--space-6);
+    padding-block: var(--space-6) calc(var(--space-6) + var(--menu-room-bottom));
   }
   footer .wrap {
     display: flex;
