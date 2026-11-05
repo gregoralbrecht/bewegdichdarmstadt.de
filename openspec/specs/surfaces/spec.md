@@ -45,3 +45,12 @@ On every surface, a filled button's fill color SHALL differ from the color of it
 
 - **WHEN** a primary button sits in a night section, where borders and shadows are orange
 - **THEN** its fill is not orange
+
+### Requirement: Dotted, rounded focus ring
+
+On every focusable element, the keyboard focus outline SHALL be dotted and SHALL have rounded corners, including on elements whose own shape is square.
+
+#### Scenario: Focus on a primary button
+
+- **WHEN** a keyboard user tabs to a primary button, whose corners are sharp
+- **THEN** a dotted outline with rounded corners surrounds it
