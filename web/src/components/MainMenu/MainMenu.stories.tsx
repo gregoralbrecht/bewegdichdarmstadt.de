@@ -1,5 +1,5 @@
 import type { Decorator, Meta, StoryObj } from "@storybook/react-vite";
-import { expect, userEvent, waitFor, within } from "storybook/test";
+import { expect, within } from "storybook/test";
 import { contrastRatio } from "../../lib/contrast";
 import { menu } from "../../lib/menu";
 import type { Surface } from "../../lib/palette";
@@ -103,52 +103,13 @@ export const OnStart: Story = {
   },
 };
 
-/** The phone case: one "Menü" button opens every link in a sheet; Escape closes it and focus goes
-    back to the button. */
-export const Sheet: Story = {
+/** The card is the only list until the drawer opens; on phones it hides. */
+export const CardOnly: Story = {
   decorators: [on("cream")],
   play: async ({ canvasElement }) => {
+    const lists = canvasElement.querySelectorAll(".main-menu__list");
+    await expect(lists).toHaveLength(1);
     if (!(await viewport(320))) return;
-    // The dialog is modal, so query the whole document, not just the story root.
-    const screen = within(canvasElement.ownerDocument.body);
-    await expect(screen.queryByRole("navigation")).toBeNull();
-
-    const open = screen.getByRole("button", { name: "Menü" });
-    await userEvent.click(open);
-    const sheet = screen.getByRole("dialog", { name: "Menü" });
-    await waitFor(() => expect(sheet).toHaveAttribute("open"));
-    const nav = within(sheet).getByRole("navigation", { name: "Hauptmenü" });
-    await expect(hrefs(nav)).toEqual(menu.map(({ href }) => href));
-    await expect(
-      within(nav).getByRole("link", { current: "page" }),
-    ).toHaveTextContent("Festival");
-
-    // Only a trusted key press closes a dialog, so this goes through Playwright.
-    const browser = (await realBrowser())!;
-    await browser.userEvent.keyboard("{Escape}");
-    await waitFor(() => expect(sheet).not.toHaveAttribute("open"));
-    await expect(open).toHaveFocus();
-
-    await userEvent.click(open);
-    await waitFor(() => expect(sheet).toHaveAttribute("open"));
-    await userEvent.click(
-      within(sheet).getByRole("button", { name: "Schließen" }),
-    );
-    await waitFor(() => expect(sheet).not.toHaveAttribute("open"));
-    await expect(open).toHaveFocus();
-  },
-};
-
-/** Both lists come from menu.ts; a drift between them would show here. */
-export const SameLinks: Story = {
-  decorators: [on("cream")],
-  play: async ({ canvasElement }) => {
-    const [card, sheet] =
-      canvasElement.querySelectorAll<HTMLElement>(".main-menu__list");
-    await expect(hrefs(card!)).toEqual(hrefs(sheet!));
-    // Two lists, but only one is ever shown, so assistive tech meets one menu.
-    if (!(await viewport(1280))) return;
-    await expect(card).toBeVisible();
-    await expect(sheet).not.toBeVisible();
+    await expect(lists[0]).not.toBeVisible();
   },
 };

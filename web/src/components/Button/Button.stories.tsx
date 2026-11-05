@@ -76,7 +76,13 @@ export const Primary: Story = {
 
     await userEvent.tab();
     await expect(button).toHaveFocus();
-    await expect(getComputedStyle(face(button)).outlineStyle).toBe("solid");
+    // A dotted ring with round corners around the sharp face.
+    const ring = getComputedStyle(face(button), "::after");
+    await expect(ring.borderTopStyle).toBe("dotted");
+    await expect(ring.borderTopLeftRadius).not.toBe("0px");
+    await expect(getComputedStyle(face(button)).borderTopLeftRadius).toBe(
+      "0px",
+    );
 
     await userEvent.keyboard("{Enter}");
     await userEvent.keyboard(" ");

@@ -110,7 +110,9 @@ Rules:
 
 **Focus states** must look different from hover:
 
-- Use `:focus-visible` with a 3px `--focus` outline at 3px offset, on top of the normal shadow (on a button, around its face). Each surface sets its own `--focus`; never override it locally.
+- Use `:focus-visible` with a 3px dotted `--focus` outline at 3px offset, on top of the normal shadow. Each surface sets its own `--focus`; never override it locally.
+- The ring has round corners (`--radius-focus`), like the dotted underline of the reduced-motion hover. Plain links and controls get them from `tokens.css`; a component's own radius wins.
+- On a sharp shape, round the ring, not the shape: draw it as a pseudo-element with a 3px dotted border and `--radius-focus`, 3px outside the shape's border. `Button` does this on its face.
 - Never remove an outline without replacing it.
 - The focus ring must stay visible on tilted cards and on every surface.
 
@@ -186,13 +188,14 @@ Layout:
 - `--maxw` (72rem): the widest a content column gets.
 - `--gutter`: the side padding, 16px or the device's safe area, whichever is larger.
 
-Radius has three steps, one per kind of thing:
+Radius has three steps, one per kind of thing, plus one for the focus ring:
 
 | Token              | Value  | Use                       |
 | ------------------ | ------ | ------------------------- |
 | `--radius-control` | 0      | Buttons and inputs: sharp |
 | `--radius-card`    | 1.5rem | Cards: very round         |
 | `--radius-tag`     | 999px  | Tags: pill                |
+| `--radius-focus`   | 0.5rem | Focus rings: every shape  |
 
 ## Motion and micro-interactions
 
@@ -209,12 +212,12 @@ The core pattern is the **press**. For cards:
 
 Buttons press in `em`, so the shadow grows with the label, each value rounded to whole pixels with `round(…, 1px)`. The shadow stays put; only the face moves:
 
-| State          | Face transform                | Shadow offset                  |
-| -------------- | ----------------------------- | ------------------------------ |
-| Rest           | none                          | 0.16em (small: 0.22em)         |
-| Hover          | up-left by half the offset    | unchanged                      |
-| Active (press) | down-right by the full offset | unchanged; the face covers it  |
-| Focus-visible  | none                          | unchanged, outline on the face |
+| State          | Face transform                | Shadow offset                   |
+| -------------- | ----------------------------- | ------------------------------- |
+| Rest           | none                          | 0.16em (small: 0.22em)          |
+| Hover          | up-left by half the offset    | unchanged                       |
+| Active (press) | down-right by the full offset | unchanged; the face covers it   |
+| Focus-visible  | none                          | unchanged, ring around the face |
 
 Timing:
 
@@ -262,7 +265,8 @@ The building blocks:
 - **`Tag`** is a pill with a tag-palette `color`, ink text and a thin ink border, on any surface. The word carries the meaning, the color helps scanning.
 - **`MainMenu`** is the main navigation in `Base.astro`'s header, built from the list in `web/src/lib/menu.ts`. To add a page to the menu, add an item there; both lists below pick it up.
   - From `66em` (wide enough for the logo beside it): a white sticker card (`data-surface="white"`, `--border`, `--shadow`, `--radius-card`), fixed and centered at the top. It never tilts. A `--menu-cut` ring in cream wraps the card and its shadow like a die-cut sticker, so the edge reaches 3:1 over every surface: ink meets cream, cream meets night and ink. Cream is a primitive here on purpose.
-  - Below `66em`: a "Menü" button in the same card at the bottom edge (above the safe area) opens a `<dialog>` bottom sheet with the same links, through invoker commands (`commandfor`, `command`). Escape, "Schließen" or a tap outside close it, and focus returns to "Menü".
+  - Below `66em`: a "Menü" button in the same card at the bottom edge (above the safe area) opens a bottom sheet with the same links. The button and sheet are `MenuDrawer`, a React Aria island that `Base.astro` passes to `MainMenu` as its child and hydrates on phones only (`client:media`), so desktop ships no JavaScript for it. Escape, "Schließen", a tap outside or swiping the sheet down (from the handle bar, or from the list once it's scrolled to the top) close it, and focus returns to "Menü". A drag past a third of the sheet's height or a flick closes it; a shorter one springs back. Under reduced motion the sheet still follows the finger, but opens, closes and settles back with a fade.
+  - Taps leave no trace: links and buttons show their press styles only for a mouse or trackpad (`(hover: hover) and (pointer: fine)`), and the drawer's buttons show their focus ring only for the keyboard (`[data-focus-visible]`).
   - The current page has `aria-current="page"` and is drawn pressed in: `--accent` fill, `--line` edge, no shadow.
   - It hides while scrolling down and comes back on scroll up, near the top of the page and whenever focus is inside it. Under reduced motion it fades instead of sliding. A small script sets `data-menu="hidden"`; without JavaScript the menu never hides, and phones show the links inline in the bottom bar instead of the button.
   - `MainMenu.css` publishes the room the menu needs (`--menu-row`, `--menu-room-top`, `--menu-room-bottom`); `Base.astro` reserves it as header height, scroll padding and footer padding, so the menu never covers a focused element or the footer.
@@ -277,7 +281,7 @@ A page ships when every box below is ticked.
 
 - [ ] Lighthouse performance 95 or higher on mobile
 - [ ] LCP under 2.0s, CLS under 0.05, INP under 200ms
-- [ ] Under 100 KB of CSS and JS combined (compressed), and no JavaScript needed to read content
+- [ ] Under 100 KB of CSS and JS combined, brotli-compressed as Cloudflare serves it, and no JavaScript needed to read content
 - [ ] Images in AVIF or WebP, with `width`, `height` and `loading="lazy"` below the fold
 
 **Accessibility**

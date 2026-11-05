@@ -123,13 +123,20 @@
   transition-duration: var(--dur-fast);
 }
 
-/* Focus looks different from hover: no lift, the outline around the face. */
+/* Focus looks different from hover: no lift, a ring around the face. The face stays sharp, so the
+   ring is its own box with round corners, 3px outside the face's border like an outline would be. */
 .button:focus-visible {
   outline: none;
 }
 .button:focus-visible .button__face {
-  outline: 3px solid var(--focus);
-  outline-offset: 3px;
+  position: relative;
+}
+.button:focus-visible .button__face::after {
+  content: "";
+  position: absolute;
+  inset: calc(-1 * (var(--border) + 6px));
+  border: 3px dotted var(--focus);
+  border-radius: var(--radius-focus);
 }
 
 @media (prefers-reduced-motion: reduce) {

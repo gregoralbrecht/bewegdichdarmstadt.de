@@ -2,6 +2,7 @@
 import { Font } from "astro:assets";
 import { Logo } from "../components/Logo/Logo";
 import { MainMenu } from "../components/MainMenu/MainMenu";
+import { MenuDrawer } from "../components/MainMenu/MenuDrawer";
 import { pageTitle } from "../lib/page-title";
 import "../styles/tokens.css";
 
@@ -30,7 +31,13 @@ const { title, robots } = Astro.props;
     </a>
     <header class="wrap">
       <Logo />
-      <MainMenu current={Astro.url.pathname} />
+      <MainMenu current={Astro.url.pathname}>
+        {/* Hydrates on phones only; desktop loads none of its JavaScript. The query matches MainMenu.css. */}
+        <MenuDrawer
+          client:media="(width < 66em)"
+          current={Astro.url.pathname}
+        />
+      </MainMenu>
     </header>
     <main id="main">
       <slot />

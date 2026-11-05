@@ -131,11 +131,14 @@
   }
 }
 
-.main-menu__link:active:not([aria-current]) {
-  border-color: var(--line);
-  box-shadow: none;
-  transform: translate(2px, 2px);
-  transition-duration: var(--dur-fast);
+/* Only a mouse or trackpad presses; on a touch screen the tap would flash a border. */
+@media (hover: hover) and (pointer: fine) {
+  .main-menu__link:active:not([aria-current]) {
+    border-color: var(--line);
+    box-shadow: none;
+    transform: translate(2px, 2px);
+    transition-duration: var(--dur-fast);
+  }
 }
 
 /* The current page is pressed in: filled, edged, no shadow. The edge and fill change its shape,
@@ -146,28 +149,102 @@
   border-color: var(--line);
 }
 
+/* The drawer's buttons are React Aria Buttons (data-rac), which flag keyboard focus only: a tap,
+   or focus coming back after one, draws no ring. */
+.main-menu__link[data-rac]:focus-visible {
+  outline: none;
+}
+.main-menu__link[data-rac][data-focus-visible] {
+  outline: 3px dotted var(--focus);
+  outline-offset: 3px;
+}
+@media (hover: hover) and (pointer: fine) {
+  .main-menu__link[data-pressed] {
+    border-color: var(--line);
+    box-shadow: none;
+    transform: translate(2px, 2px);
+    transition-duration: var(--dur-fast);
+  }
+}
+
+/* The drawer: React Aria portals the backdrop and the sheet to <body>, and sets data-entering and
+   data-exiting for as long as the animations below run. */
+.main-menu__backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 20;
+  background: color-mix(in srgb, var(--line) 60%, transparent);
+}
+.main-menu__backdrop[data-entering] {
+  animation: main-menu-fade-in var(--dur-slow);
+}
+.main-menu__backdrop[data-exiting] {
+  animation: main-menu-fade-out var(--dur) forwards;
+}
+
 /* The bottom sheet: full width, flush with the window's bottom edge, links stacked big. */
+/* --drag is how far a finger has pulled it down (useSheetDrag); let go, it springs back. */
 .main-menu__sheet {
-  inset-block: auto 0;
-  width: 100%;
-  max-width: none;
+  position: absolute;
+  inset: auto 0 0;
+  display: flex;
+  flex-direction: column;
   max-height: calc(100% - var(--space-7));
-  margin: 0;
-  padding: var(--space-5) var(--gutter)
-    calc(var(--space-5) + env(safe-area-inset-bottom));
+  transform: translateY(var(--drag, 0px));
+  transition: transform var(--dur-slow) var(--ease-spring);
   color: var(--fg);
   background: var(--bg);
   border: var(--border) solid var(--line);
   border-bottom: 0;
   border-radius: var(--radius-card) var(--radius-card) 0 0;
 }
-.main-menu__sheet::backdrop {
-  background: color-mix(in srgb, var(--line) 60%, transparent);
+.main-menu__sheet[data-entering] {
+  animation: main-menu-slide-in var(--dur-slow) var(--ease-spring);
 }
-.main-menu__sheet .main-menu__list {
+/* Leaves from wherever it is: the keyframes have no start, so they begin at the current transform. */
+.main-menu__sheet[data-exiting] {
+  animation: main-menu-slide-out var(--dur) ease-in forwards;
+}
+
+.main-menu__sheet[data-dragging] {
+  transition: none;
+}
+
+/* Everything but the list is a grip: the page never scrolls under a drag. */
+.main-menu__drag {
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+  touch-action: none;
+}
+.main-menu__handle {
+  flex: none;
+  width: var(--space-7);
+  height: var(--space-2);
+  margin: var(--space-3) auto 0;
+  background: var(--line);
+  border-radius: var(--radius-tag);
+}
+
+/* At the top, a downward swipe on the list drags the sheet: the list only pans to scroll down. */
+.main-menu__dialog {
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  touch-action: pan-down;
+  padding: var(--space-4) var(--gutter)
+    calc(var(--space-5) + env(safe-area-inset-bottom));
+}
+.main-menu__dialog[data-scrolled] {
+  touch-action: pan-y;
+}
+/* The dialog takes focus when it opens; it's a container, not a control, so it draws no ring. */
+.main-menu__dialog:focus-visible {
+  outline: none;
+}
+.main-menu__dialog .main-menu__list {
   flex-direction: column;
 }
-.main-menu__sheet .main-menu__link {
+.main-menu__dialog .main-menu__link {
   justify-content: flex-start;
   font-size: var(--step-2);
 }
@@ -175,6 +252,27 @@
   width: 100%;
   margin-top: var(--space-4);
   border-color: var(--line);
+}
+
+@keyframes main-menu-fade-in {
+  from {
+    opacity: 0;
+  }
+}
+@keyframes main-menu-fade-out {
+  to {
+    opacity: 0;
+  }
+}
+@keyframes main-menu-slide-in {
+  from {
+    transform: translateY(100%);
+  }
+}
+@keyframes main-menu-slide-out {
+  to {
+    transform: translateY(100%);
+  }
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -191,7 +289,21 @@
     transition: none;
   }
   .main-menu__link:hover:not([aria-current]),
-  .main-menu__link:active:not([aria-current]) {
+  .main-menu__link:active:not([aria-current]),
+  .main-menu__link[data-pressed] {
     transform: none;
+  }
+  /* The sheet still follows the finger, but fades in, out and back instead of sliding. */
+  .main-menu__sheet {
+    transition: none;
+  }
+  .main-menu__sheet[data-settling] {
+    animation: main-menu-fade-in var(--dur);
+  }
+  .main-menu__sheet[data-entering] {
+    animation: main-menu-fade-in var(--dur-slow);
+  }
+  .main-menu__sheet[data-exiting] {
+    animation: main-menu-fade-out var(--dur) forwards;
   }
 }

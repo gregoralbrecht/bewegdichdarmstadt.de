@@ -37,6 +37,8 @@
   --radius-control: 0;
   --radius-card: 1.5rem;
   --radius-tag: 999px;
+  /* The focus ring's corners, on every shape, so even sharp buttons get a round dotted ring. */
+  --radius-focus: 0.5rem;
 
   /* Type scale. --step-0 is body text and never drops below 18px. */
   --step--1: clamp(0.875rem, 0.85rem + 0.15vw, 0.95rem);
@@ -210,8 +212,14 @@ body {
 }
 
 :focus-visible {
-  outline: 3px solid var(--focus);
+  outline: 3px dotted var(--focus);
   outline-offset: 3px;
+}
+
+/* Plain links and controls have no shape but their outline, so it gets round corners here. Zero
+   specificity: a component's own radius always wins. */
+:where(a, button, summary, [tabindex]) {
+  border-radius: var(--radius-focus);
 }
 
 a {

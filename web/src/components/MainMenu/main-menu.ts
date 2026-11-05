@@ -1,23 +1,14 @@
 // Hides the main menu while scrolling down and brings it back on scroll up, by toggling
-// data-menu="hidden"; MainMenu.css does the rest. Also opens the sheet in browsers without invoker
-// commands. Nothing here is required: without it the menu just stays put.
+// data-menu="hidden"; MainMenu.css does the rest. Nothing here is required: without it the menu
+// just stays put.
 
 const THRESHOLD = 8;
 
 const menu = document.querySelector<HTMLElement>(".main-menu");
-const sheet = menu?.querySelector("dialog");
 
-if (menu && sheet) {
-  if (!("command" in HTMLButtonElement.prototype)) {
-    for (const button of menu.querySelectorAll<HTMLButtonElement>(
-      "button[command]",
-    )) {
-      button.addEventListener("click", () => {
-        if (button.getAttribute("command") === "show-modal") sheet.showModal();
-        else sheet.close();
-      });
-    }
-  }
+if (menu) {
+  // The drawer's sheet, portaled to <body> while it's open.
+  const sheetOpen = () => document.querySelector(".main-menu__sheet") !== null;
 
   const header = menu.closest("header");
   // Clamped, so iOS overscroll past either end doesn't read as a change of direction.
@@ -31,7 +22,7 @@ if (menu && sheet) {
 
   const update = () => {
     queued = false;
-    if (sheet.open) return;
+    if (sheetOpen()) return;
     const y = position();
     if (y <= (header?.offsetHeight ?? 0)) {
       delete menu.dataset.menu;
