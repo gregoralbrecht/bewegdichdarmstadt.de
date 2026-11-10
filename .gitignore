@@ -6,3 +6,4 @@ dist/
 pitch/deploy/public/
 pitch/deploy/.cloudflare/
 storybook-static/
+debug-storybook.log

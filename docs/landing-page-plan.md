@@ -103,7 +103,7 @@ In dependency order. One change each; the last one assembles the page.
 
 | Done | #   | Change              | What it covers                                                                                        | Needs   |
 | ---- | --- | ------------------- | ----------------------------------------------------------------------------------------------------- | ------- |
-| [ ]  | 1   | `prose-base`        | Text styling: paragraph width, lead, links, lists. Fixes the unstyled `<h1>` on the placeholder pages | –       |
+| [x]  | 1   | `prose-base`        | Text styling: paragraph width, lead, links, lists. Fixes the unstyled `<h1>` on the placeholder pages | –       |
 | [ ]  | 2   | `sticker-card`      | `Card` gets a tilt (`rot`) and one heading link stretched over the card                               | –       |
 | [ ]  | 3   | `card-grid`         | A `<ul>` of cards whose neighbors tilt in opposite directions                                         | 2       |
 | [ ]  | 4   | `cluster`           | A wrapping row for buttons, tags and short items such as the past dates                               | –       |

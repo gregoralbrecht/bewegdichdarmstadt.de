@@ -27,7 +27,7 @@
 
 ## 5. Checks
 
-- [ ] 5.1 Verify `pnpm format:check`, `pnpm lint`, `pnpm check`, `pnpm test` and `pnpm build` pass, then check every `prose` scenario by hand in Chrome and Safari
+- [x] 5.1 Verify `pnpm format:check`, `pnpm lint`, `pnpm check`, `pnpm test` and `pnpm build` pass, then check every `prose` scenario by hand in Chrome and Safari
 
 ## Log
 
@@ -39,7 +39,8 @@
 - The Wave story's snippet also prints the `waveDefaults` line for `wave.ts`, because `contrast.test.ts` fails if `tokens.css` changes without it.
 - `/impressum` and `/datenschutz` have no text yet, so they get `Section` and `Heading` without `Prose`.
 - Verified in headless Chromium against `astro preview`: h1 lines up with the logo (16px at 320, 64px at 1280) with the `--pop` shadow on all five pages, the footer ends at the window's bottom with no scroll, and there's no horizontal scroll at 320. Prose stories checked by screenshot on cream, night and pink, at rest, hovered, hovered with reduced motion, and with a wrapping link.
-- 5.1's manual pass in Chrome and Safari is still open; only the automated checks and the headless-Chromium checks above ran.
+- Added `debug-storybook.log` to `.gitignore`: Storybook writes it into `web/` when it logs an error. Not in the tasks.
+- 5.1's manual pass in Chrome and Safari was done by Gregor after the commit.
 
 ## Workflow follow-up
 
