@@ -16,7 +16,10 @@ export type DragOptions = {
 };
 
 // Drags from the middle of the first element matching `selector` straight down by `distance` px,
-// with a real mouse or real touch events, so pointer capture and touch-action apply.
+// with real mouse or touch events through CDP, so pointer capture and touch-action apply.
+// Each event carries a timestamp from a clock that moves exactly `interval` per step and `rest`
+// before letting go, so the speed the page sees comes from the options, not from runner load.
+// The real waits stay so CSS state and animations move on in between.
 const drag: BrowserCommand<[string, number, DragOptions]> = async (
   context,
   selector,
@@ -32,28 +35,47 @@ const drag: BrowserCommand<[string, number, DragOptions]> = async (
     .boundingBox())!;
   const x = box.x + box.width / 2;
   const y = box.y + box.height / 2;
-  const cdp =
-    pointer === "touch" ? await page.context().newCDPSession(page) : null;
+  const cdp = await page.context().newCDPSession(page);
+  let timestamp = Date.now() / 1000;
+  let buttons = 0;
   const touch = (type: "touchStart" | "touchMove" | "touchEnd", dy: number) =>
-    cdp!.send("Input.dispatchTouchEvent", {
+    cdp.send("Input.dispatchTouchEvent", {
       type,
       touchPoints: type === "touchEnd" ? [] : [{ x, y: y + dy }],
+      timestamp,
     });
-  if (cdp) await touch("touchStart", 0);
+  const mouse = (
+    type: "mouseMoved" | "mousePressed" | "mouseReleased",
+    dy: number,
+  ) => {
+    buttons = { mouseMoved: buttons, mousePressed: 1, mouseReleased: 0 }[type];
+    return cdp.send("Input.dispatchMouseEvent", {
+      type,
+      x,
+      y: y + dy,
+      button: "left",
+      buttons,
+      clickCount: 1,
+      timestamp,
+    });
+  };
+  if (pointer === "touch") await touch("touchStart", 0);
   else {
-    await page.mouse.move(x, y);
-    await page.mouse.down();
+    await mouse("mouseMoved", 0);
+    await mouse("mousePressed", 0);
   }
   for (let step = 1; step <= steps; step++) {
     await page.waitForTimeout(interval);
+    timestamp += interval / 1000;
     const dy = (distance * step) / steps;
-    if (cdp) await touch("touchMove", dy);
-    else await page.mouse.move(x, y + dy);
+    if (pointer === "touch") await touch("touchMove", dy);
+    else await mouse("mouseMoved", dy);
   }
   await page.waitForTimeout(rest);
-  if (cdp) await touch("touchEnd", distance);
-  else await page.mouse.up();
-  await cdp?.detach();
+  timestamp += rest / 1000;
+  if (pointer === "touch") await touch("touchEnd", distance);
+  else await mouse("mouseReleased", distance);
+  await cdp.detach();
 };
 
 // Two projects: plain unit tests in Node, and every story as a test in headless Chromium.
