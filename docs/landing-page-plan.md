@@ -112,7 +112,7 @@ Every later change builds its component and replaces the matching bare HTML on `
 | [x]  | 3   | `hero`                  | h1, lead and the page's one hero button                                                               | section 1                                 | 2     |
 | [x]  | 4   | `cta-band`              | A section with a heading, text and one button                                                         | section 6                                 | 2     |
 | [x]  | 5   | `fact-list`             | A `<dl>` of short facts                                                                               | the bare `<dl>` in section 3              | 2     |
-| [ ]  | 6   | `cluster`               | A wrapping row for buttons, tags and short items such as the past dates                               | the past dates in section 4               | 2     |
+| [x]  | 6   | `cluster`               | A wrapping row for buttons, tags and short items such as the past dates                               | the past dates in section 4               | 2     |
 | [ ]  | 7   | `when`                  | `<time datetime>` with German date formatting                                                         | the written-out dates in sections 2 and 4 | 2     |
 | [ ]  | 8   | `sticker-card`          | `Card` gets a tilt (`rot`) and one heading link stretched over the card                               | the bare cards in sections 2 and 5        | 2     |
 | [ ]  | 9   | `card-grid`             | A `<ul>` of cards whose neighbors tilt in opposite directions                                         | the card lists in sections 2 and 5        | 8     |
