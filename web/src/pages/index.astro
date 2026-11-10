@@ -1,6 +1,7 @@
 ---
 import { Button } from "../components/Button/Button";
 import { CtaBand } from "../components/CtaBand/CtaBand";
+import { FactList } from "../components/FactList/FactList";
 import { Heading } from "../components/Heading/Heading";
 import { Hero } from "../components/Hero/Hero";
 import { Lead } from "../components/Lead/Lead";
@@ -70,18 +71,15 @@ import Base from "../layouts/Base.astro";
         Beim Run &amp; Rave laufen und fahren wir rund 5,5 km mit Musik, in
         entspanntem Tempo von etwa 7:30 Minuten pro Kilometer.
       </Lead>
-      <dl>
-        <dt>Treffpunkt</dt>
-        <dd>Friedensplatz</dd>
-        <dt>Mit dem Rad dabei sein</dt>
-        <dd>geht</dd>
-        <dt>Unterwegs abkürzen</dt>
-        <dd>geht</dd>
-        <dt>Teilnahme</dt>
-        <dd>kostenlos</dd>
-        <dt>Demo</dt>
-        <dd>angemeldet, mit Polizeibegleitung</dd>
-      </dl>
+      <FactList
+        items={[
+          { term: "Treffpunkt", detail: "Friedensplatz" },
+          { term: "Mit dem Rad dabei sein", detail: "geht" },
+          { term: "Unterwegs abkürzen", detail: "geht" },
+          { term: "Teilnahme", detail: "kostenlos" },
+          { term: "Demo", detail: "angemeldet, mit Polizeibegleitung" },
+        ]}
+      />
     </Prose>
   </Section>
 

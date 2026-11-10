@@ -1,0 +1,30 @@
+/* Facts in columns that fill the content column, one column at 320px. Rules, not cards: sticker
+   cards are for things you click. */
+.fact-list {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 15rem), 1fr));
+  gap: var(--space-5) var(--space-6);
+}
+
+.fact-list__fact {
+  padding-block-start: var(--space-3);
+  border-block-start: var(--border-thin) solid var(--line);
+}
+
+/* The marker is a square with empty content, so assistive technology reads only the term. It
+   stands in for an icon per fact until icons arrive. */
+.fact-list dt::before {
+  content: "";
+  display: inline-block;
+  width: 0.6em;
+  height: 0.6em;
+  margin-inline-end: var(--space-2);
+  background: var(--accent);
+  border: var(--border-thin) solid var(--line);
+  box-shadow: var(--shadow-sm) var(--line);
+}
+
+.fact-list dd {
+  margin: var(--space-1) 0 0;
+  font: 700 var(--step-1) / 1.2 var(--font-display);
+}
