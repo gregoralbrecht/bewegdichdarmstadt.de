@@ -125,7 +125,7 @@ Look:
 
 - `--border`, `--shadow`, a white or accent surface.
 - Tilt set per card with `Card`'s `tilt`, which sets `--tilt`, between -3° and 3°.
-- Neighbors tilt in opposite directions; never two in a row the same way.
+- Neighbors tilt in opposite directions; never two in a row the same way. Put a group of cards in a `CardGrid`, which does this for you.
 - Optional extras: a tape strip on one corner, a small badge sticker overlapping the edge.
 
 What may tilt:
@@ -292,6 +292,11 @@ The building blocks:
   - `as="ul"` when the items form a set to count, such as dates; give it `<li>` children and a name with `aria-labelledby`. It keeps `role="list"`, because `list-style: none` drops the list role in Safari. The default `div` is for anything else, such as a row of tags.
   - Layout only: it never styles its items, and the gap separates them, so no "·" markers that would start a wrapped line. The list reset has zero specificity, so spacing from `Prose` still applies.
   - One gap for now. Buttons need a wider one, which comes with the first button row moved onto `Cluster`.
+- **`CardGrid`** is a group of cards: a `<ul class="card-grid" role="list">` whose `<li>` children each hold one `Card`. Other props pass through.
+  - `<li>` children, because Astro hands a React component its children as one slot, so the grid can't wrap them itself. It keeps `role="list"`, because `list-style: none` drops the list role in Safari.
+  - A grid of `repeat(auto-fill, minmax(min(100%, 15rem), 1fr))`, gaps `--space-6` between rows and `--space-5` between columns, one column at 320px. Cards in a row stretch to the same height. The list reset has zero specificity, so spacing from `Prose` still applies.
+  - Tilts alternate by index in a cycle of four: `-2deg`, `2deg`, `-3deg`, `1deg` on `--tilt`, so neighbors turn opposite ways and cards two apart by different amounts. A `Card` without `tilt` inherits it; an explicit `tilt` wins.
+  - By index, because CSS can't see the column count: with an even number of columns, cards above each other turn the same way, though by different amounts in a two-column grid.
 - **`When`** is a date: every date on the site goes through it. `date` takes the ISO date (`"2027-09-11"`) and renders `<time datetime="2027-09-11">11. September</time>`. Other `<time>` props pass through.
   - `weekday` adds the weekday and `year` the year: `<When date="2027-09-11" weekday year />` reads "Samstag, 11. September 2027".
   - The text comes from `formatDate` in `web/src/lib/date.ts` (`Intl.DateTimeFormat("de-DE")`, in UTC so the day never shifts). A date that isn't a real `YYYY-MM-DD` day throws, so a typo fails the build.

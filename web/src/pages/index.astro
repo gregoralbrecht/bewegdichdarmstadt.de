@@ -1,6 +1,7 @@
 ---
 import { Button } from "../components/Button/Button";
 import { Card, CardLink } from "../components/Card/Card";
+import { CardGrid } from "../components/CardGrid/CardGrid";
 import { Cluster } from "../components/Cluster/Cluster";
 import { CtaBand } from "../components/CtaBand/CtaBand";
 import { FactList } from "../components/FactList/FactList";
@@ -39,9 +40,9 @@ import Base from "../layouts/Base.astro";
       <Heading level={2} id="termine">
         Termine
       </Heading>
-      <ul>
+      <CardGrid>
         <li>
-          <Card tilt={-2}>
+          <Card>
             <Heading level={3}>
               <CardLink href="/run-and-rave">Run &amp; Rave</CardLink>
             </Heading>
@@ -50,7 +51,7 @@ import Base from "../layouts/Base.astro";
           </Card>
         </li>
         <li>
-          <Card tilt={2}>
+          <Card>
             <Heading level={3}>
               <CardLink href="/festival">Festival 2027</CardLink>
             </Heading>
@@ -61,7 +62,7 @@ import Base from "../layouts/Base.astro";
             </p>
           </Card>
         </li>
-      </ul>
+      </CardGrid>
     </Prose>
   </Section>
 
@@ -119,16 +120,16 @@ import Base from "../layouts/Base.astro";
         Hinter <em>Beweg dich, Darmstadt</em> stehen zwei selbstständige Frauen
         aus Darmstadt: Steffi und Lea.
       </p>
-      <ul>
+      <CardGrid>
         <li>
-          <Card tilt={2}>
+          <Card>
             <Heading level={3}>Steffi Rieger</Heading>
             <p>Foto folgt</p>
             <p>Yogalehrerin, Unternehmerin und Life &amp; Team Coach</p>
           </Card>
         </li>
         <li>
-          <Card tilt={-2}>
+          <Card>
             <Heading level={3}>Lea Emmel</Heading>
             <p>Foto folgt</p>
             <p>
@@ -137,7 +138,7 @@ import Base from "../layouts/Base.astro";
             </p>
           </Card>
         </li>
-      </ul>
+      </CardGrid>
       <p class="actions">
         <Button href="/ueber-uns">Mehr über uns</Button>
       </p>

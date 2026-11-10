@@ -1,0 +1,34 @@
+/* As many 15rem columns as fit, one at 320px. The gaps leave room for the hard shadows. */
+.card-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(min(100%, 15rem), 1fr));
+  gap: var(--space-6) var(--space-5);
+}
+
+/* Neighbors tilt in opposite directions, and by varying amounts, so cards two apart differ too. A Card
+   without a tilt inherits this; one with a tilt keeps its own. By index, since CSS can't see the
+   column count. */
+.card-grid > li:nth-child(4n + 1) {
+  --tilt: -2deg;
+}
+.card-grid > li:nth-child(4n + 2) {
+  --tilt: 2deg;
+}
+.card-grid > li:nth-child(4n + 3) {
+  --tilt: -3deg;
+}
+.card-grid > li:nth-child(4n + 4) {
+  --tilt: 1deg;
+}
+
+/* Cards in a row are as tall as the row. */
+.card-grid > li > .card {
+  height: 100%;
+}
+
+/* The list reset at zero specificity, so the spacing around it (Prose's) still wins. */
+:where(.card-grid) {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
