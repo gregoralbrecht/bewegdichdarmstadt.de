@@ -108,7 +108,7 @@ Every later change builds its component and replaces the matching bare HTML on `
 | Done | #   | Change                  | What it covers                                                                                        | Replaces on `/`                           | Needs |
 | ---- | --- | ----------------------- | ----------------------------------------------------------------------------------------------------- | ----------------------------------------- | ----- |
 | [x]  | 1   | `prose-base`            | Text styling: paragraph width, lead, links, lists. Fixes the unstyled `<h1>` on the placeholder pages | –                                         | –     |
-| [ ]  | 2   | `landing-page-skeleton` | Sections 1–6 as bare HTML; the token preview merges into `/gestaltung`                                | the token preview                         | 1     |
+| [x]  | 2   | `landing-page-skeleton` | Sections 1–6 as bare HTML; the token preview merges into `/gestaltung`                                | the token preview                         | 1     |
 | [ ]  | 3   | `hero`                  | h1, lead and the page's one hero button                                                               | section 1                                 | 2     |
 | [ ]  | 4   | `cta-band`              | A section with a heading, text and one button                                                         | section 6                                 | 2     |
 | [ ]  | 5   | `fact-list`             | A `<dl>` of short facts                                                                               | the bare `<dl>` in section 3              | 2     |
