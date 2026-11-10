@@ -1,0 +1,14 @@
+/* Layout only: the items keep their own styles. The gap separates them, so no markers. */
+.cluster {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-2) var(--space-4);
+}
+
+/* The list reset at zero specificity, so the spacing around it (Prose's) still wins. */
+:where(.cluster) {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}

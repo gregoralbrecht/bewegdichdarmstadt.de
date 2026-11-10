@@ -1,5 +1,6 @@
 ---
 import { Button } from "../components/Button/Button";
+import { Cluster } from "../components/Cluster/Cluster";
 import { CtaBand } from "../components/CtaBand/CtaBand";
 import { FactList } from "../components/FactList/FactList";
 import { Heading } from "../components/Heading/Heading";
@@ -88,9 +89,13 @@ import Base from "../layouts/Base.astro";
       <Heading level={2} id="bisher">
         Bisher
       </Heading>
-      <p>
-        Run &amp; Rave 2026: 10. Juli · 20. August · 24. September · 30. Oktober
-      </p>
+      <p id="run-and-rave-2026">Run &amp; Rave 2026</p>
+      <Cluster as="ul" aria-labelledby="run-and-rave-2026">
+        <li>10. Juli</li>
+        <li>20. August</li>
+        <li>24. September</li>
+        <li>30. Oktober</li>
+      </Cluster>
       <p>Festival 2025 auf dem Friedensplatz</p>
     </Prose>
   </Section>
