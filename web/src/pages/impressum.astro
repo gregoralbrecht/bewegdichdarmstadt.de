@@ -1,7 +1,13 @@
 ---
+import { Heading } from "../components/Heading/Heading";
+import { Section } from "../components/Section/Section";
 import Base from "../layouts/Base.astro";
 ---
 
 <Base title="Impressum">
-  <h1>Impressum</h1>
+  <Section aria-labelledby="titel">
+    <Heading level={1} id="titel">
+      Impressum
+    </Heading>
+  </Section>
 </Base>

@@ -1,0 +1,72 @@
+/* Running text. Only plain elements: anything with a class (Button, Card, a styled list) keeps its
+   own link and list styles. */
+.prose {
+  /* The link underline's geometry; the Wave story tunes these. */
+  --wave-length: 0.62em;
+  --wave-height: 0.25em;
+  --wave-gap: 0.32em;
+  --wave-speed: 0.5s;
+  /* The straight line that replaces the wave on hover under reduced motion. */
+  --wave-line: 0.09em;
+}
+
+.prose > * {
+  margin-block: 0;
+}
+
+.prose > * + * {
+  margin-block-start: var(--space-4);
+}
+
+.prose p,
+.prose :is(ul, ol):not([class]) > li {
+  max-width: 65ch;
+}
+
+/* Markers hang in the indent, which stays inside the column even at 320px. */
+.prose :is(ul, ol):not([class]) {
+  padding-inline-start: 1.25em;
+}
+
+.prose ul:not([class]) {
+  list-style-type: disc;
+}
+
+.prose ol:not([class]) {
+  list-style-type: decimal;
+}
+
+/* A wavy underline in the surface's --line, as an image so it can roll. Each line of a wrapping
+   link gets its own copy. */
+.prose a:not([class]) {
+  font-weight: 700;
+  color: var(--fg);
+  text-decoration: none;
+  padding-bottom: var(--wave-gap);
+  background: var(--wave) left 0 bottom 0 / var(--wave-length)
+    var(--wave-height) repeat-x;
+  -webkit-box-decoration-break: clone;
+  box-decoration-break: clone;
+}
+
+@keyframes prose-wave-roll {
+  to {
+    background-position-x: var(--wave-length);
+  }
+}
+
+@media (hover: hover) {
+  .prose a:not([class]):hover {
+    animation: prose-wave-roll var(--wave-speed) linear infinite;
+  }
+}
+
+/* No motion: hover straightens the wave into a line through its middle, once. */
+@media (prefers-reduced-motion: reduce) and (hover: hover) {
+  .prose a:not([class]):hover {
+    animation: none;
+    background: linear-gradient(var(--line), var(--line)) left 0 bottom
+      calc((var(--wave-height) - var(--wave-line)) / 2) / 100% var(--wave-line)
+      no-repeat;
+  }
+}

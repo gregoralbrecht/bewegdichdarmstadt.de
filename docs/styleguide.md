@@ -34,19 +34,19 @@ The quality bar sits above all four. When style and quality conflict, quality wi
 
 A section picks one surface with `data-surface` (the `Section` component's `surface` prop), and everything inside follows. The page itself is cream. Each surface sets every role:
 
-| Surface  | `--fg` | `--muted`   | `--line` | `--pop` | `--accent` / `--on-accent` | `--link`    | `--focus`   | `--hero-1` / `--hero-2` | `--hero-ink` |
-| -------- | ------ | ----------- | -------- | ------- | -------------------------- | ----------- | ----------- | ----------------------- | ------------ |
-| `cream`  | ink    | muted-light | ink      | orange  | orange / ink               | orange-deep | orange-deep | pink / violet           | `--line`     |
-| `white`  | ink    | muted-light | ink      | orange  | orange / ink               | orange-deep | orange-deep | pink / violet           | `--line`     |
-| `night`  | white  | muted-dark  | orange   | orange  | cream / ink                | pink        | orange      | pink / violet           | transparent  |
-| `ink`    | cream  | muted-dark  | orange   | orange  | cream / ink                | orange      | orange      | pink / violet           | transparent  |
-| `orange` | ink    | ink         | ink      | white   | white / ink                | ink         | ink         | pink / violet           | `--line`     |
-| `pink`   | ink    | ink         | ink      | white   | orange / ink               | ink         | ink         | violet / white          | `--line`     |
-| `violet` | ink    | ink         | ink      | white   | orange / ink               | ink         | ink         | pink / white            | `--line`     |
+| Surface  | `--fg` | `--muted`   | `--line` | `--wave`        | `--pop` | `--accent` / `--on-accent` | `--link`    | `--focus`   | `--hero-1` / `--hero-2` | `--hero-ink` |
+| -------- | ------ | ----------- | -------- | --------------- | ------- | -------------------------- | ----------- | ----------- | ----------------------- | ------------ |
+| `cream`  | ink    | muted-light | ink      | `--wave-ink`    | orange  | orange / ink               | orange-deep | orange-deep | pink / violet           | `--line`     |
+| `white`  | ink    | muted-light | ink      | `--wave-ink`    | orange  | orange / ink               | orange-deep | orange-deep | pink / violet           | `--line`     |
+| `night`  | white  | muted-dark  | orange   | `--wave-orange` | orange  | cream / ink                | pink        | orange      | pink / violet           | transparent  |
+| `ink`    | cream  | muted-dark  | orange   | `--wave-orange` | orange  | cream / ink                | orange      | orange      | pink / violet           | transparent  |
+| `orange` | ink    | ink         | ink      | `--wave-ink`    | white   | white / ink                | ink         | ink         | pink / violet           | `--line`     |
+| `pink`   | ink    | ink         | ink      | `--wave-ink`    | white   | orange / ink               | ink         | ink         | violet / white          | `--line`     |
+| `violet` | ink    | ink         | ink      | `--wave-ink`    | white   | orange / ink               | ink         | ink         | pink / white            | `--line`     |
 
-`--bg` is the surface's own color. `--line` draws the borders and shadows of filled shapes. `--pop` is the h1's text shadow, `--accent` the primary button fill with `--on-accent` as its label, `--hero-1` and `--hero-2` the hero button's two layers, and `--hero-ink` their edges: `--line` on light surfaces, transparent on dark ones, so the stack goes flat there like the two-tone heading. On dark surfaces `--accent` is cream, because an orange button would merge with its orange line.
+`--bg` is the surface's own color. `--line` draws the borders and shadows of filled shapes, and `--wave` is the link underline in `--line`'s color. `--pop` is the h1's text shadow, `--accent` the primary button fill with `--on-accent` as its label, `--hero-1` and `--hero-2` the hero button's two layers, and `--hero-ink` their edges: `--line` on light surfaces, transparent on dark ones, so the stack goes flat there like the two-tone heading. On dark surfaces `--accent` is cream, because an orange button would merge with its orange line.
 
-A Vitest test (`web/src/styles/contrast.test.ts`) reads every `[data-surface]` block from `tokens.css` and checks that each declares every role and that `--fg`, `--muted`, `--link` and `--on-accent` (on `--accent`) reach 4.5, and `--line` and `--focus` reach 3, against the surface. It also checks that `--accent` differs from `--line`, and that no role but `--hero-ink` is transparent. A new surface needs no new test, only a new block.
+A Vitest test (`web/src/styles/contrast.test.ts`) reads every `[data-surface]` block from `tokens.css` and checks that each declares every role and that `--fg`, `--muted`, `--link` and `--on-accent` (on `--accent`) reach 4.5, and `--line` and `--focus` reach 3, against the surface. It also checks that `--accent` differs from `--line`, that no role but `--hero-ink` is transparent, and that `--wave` points at the `--wave-*` image whose stroke is the surface's `--line`. A new surface needs no new test, only a new block.
 
 ### Palette
 
@@ -83,6 +83,7 @@ Rules:
 
 - **Polarity.** Light surfaces (cream, white, orange, pink, violet) carry ink text; dark surfaces (night, ink) carry white or cream. Never white on orange (2.2) or pink (2.0), never plain orange as text on cream (2.1).
 - **Cards are white islands.** On a dark or loud surface, a card is white, so its content reads like on cream. A card gets a color fill from the tag palette only when the color carries meaning (a time slot, a category), and only on light surfaces.
+- **A new line color needs a new wave.** `--wave` is an image, so it can't follow `--line` by itself. Add `--wave-<primitive>` to `tokens.css` as `waveImage()` of that primitive (from `web/src/lib/wave.ts`, with its defaults); the test checks the two match.
 - **No new colors without a contrast check.** A new surface or tag color lands with its block in `tokens.css`, and the test must pass.
 - **Color never carries meaning alone.** Pair it with an icon, a word or a shape.
 - **Dark mode is out of scope for launch.** Components read roles, so it can come later as a surface.
@@ -263,6 +264,12 @@ The building blocks:
 - **`Heading`** level 1 gets one hard text shadow in `--pop`.
 - **`Card`** is an `<article>` with a white body (`data-surface="white"`) inside a frame whose `--line` border and shadow come from the surface around it: ink on cream, orange on night. `fill` gives the body a tag-palette color, only when the color carries meaning and only on light surfaces.
 - **`Tag`** is a pill with a tag-palette `color`, ink text and a thin ink border, on any surface. The word carries the meaning, the color helps scanning.
+- **`Prose`** wraps running text in a `<div class="prose">`. It zeroes its children's margins and spaces them with `--space-4`, caps paragraphs and list items at `65ch`, and gives `<ul>` and `<ol>` bullets and numbers in an indent that stays inside the column at 320px.
+  - Links are bold `--fg` with a wavy underline: the surface's `--wave` as a `repeat-x` background, cloned onto every line of a wrapping link. On hover (on devices that can hover) the wave rolls one period per `--wave-speed`. Under reduced motion it doesn't roll; hover swaps it for a straight `--line` bar `--wave-line` thick through the wave's middle. The global dotted focus ring stays.
+  - The wave's geometry lives on `.prose` as `--wave-length`, `--wave-height`, `--wave-gap` (space under the text), `--wave-speed` and `--wave-line`. To tune it, open the `Prose` → `Wave` story in Storybook: stroke and amplitude rebuild the image through `waveImage()`, the rest are sliders, and "pin hover" holds the rolling state. Copy the snippet below the sample into `wave.ts` (`waveDefaults`), `tokens.css` (`--wave-*`) and `Prose.css`; `contrast.test.ts` fails until `tokens.css` matches `wave.ts`.
+  - Headings inside it stay `Heading`; `Prose` doesn't style them.
+  - It styles only plain elements: a link or list with a class (`Button`, `Card`, a styled list) keeps its own styles.
+- **`Lead`** is the `<p class="lead">` under a heading: `--step-1` (lead text in the type scale), line height 1.4, capped at `65ch`. It works inside `Prose` or alone, like the hero's lead.
 - **`MainMenu`** is the main navigation in `Base.astro`'s header, built from the list in `web/src/lib/menu.ts`. To add a page to the menu, add an item there; both lists below pick it up.
   - From `66em` (wide enough for the logo beside it): a white sticker card (`data-surface="white"`, `--border`, `--shadow`, `--radius-card`), fixed and centered at the top. It never tilts. A `--menu-cut` ring in cream wraps the card and its shadow like a die-cut sticker, so the edge reaches 3:1 over every surface: ink meets cream, cream meets night and ink. Cream is a primitive here on purpose.
   - Below `66em`: a "Menü" button in the same card at the bottom edge (above the safe area) opens a bottom sheet with the same links. The button and sheet are `MenuDrawer`, a React Aria island that `Base.astro` passes to `MainMenu` as its child and hydrates on phones only (`client:media`), so desktop ships no JavaScript for it. Escape, "Schließen", a tap outside or swiping the sheet down (from the handle bar, or from the list once it's scrolled to the top) close it, and focus returns to "Menü". A drag past a third of the sheet's height or a flick closes it; a shorter one springs back. Under reduced motion the sheet still follows the finger, but opens, closes and settles back with a fade.

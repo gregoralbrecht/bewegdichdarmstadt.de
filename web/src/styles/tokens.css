@@ -24,6 +24,11 @@
   --tag-lavender: #dcd8f0;
   --tag-peach: #ffc3a0;
 
+  /* The link underline's wave, one per line color: waveImage() in web/src/lib/wave.ts with its
+     defaults. Surfaces pick theirs as --wave; contrast.test.ts checks both stay in step. */
+  --wave-ink: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 8' preserveAspectRatio='none'%3E%3Cpath d='M0 4Q5 0 10 4T20 4' fill='none' stroke='%231b1a33' stroke-width='2.9'/%3E%3C/svg%3E");
+  --wave-orange: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 8' preserveAspectRatio='none'%3E%3Cpath d='M0 4Q5 0 10 4T20 4' fill='none' stroke='%23f8971c' stroke-width='2.9'/%3E%3C/svg%3E");
+
   /* Shadows are offsets; the use site adds the color (`var(--shadow) var(--line)`), so it resolves
      inside the element's surface. Hard, zero blur, down-right. */
   --shadow-sm: 4px 4px 0;
@@ -77,6 +82,7 @@
   --fg: var(--ink);
   --muted: var(--muted-light);
   --line: var(--ink);
+  --wave: var(--wave-ink);
   --pop: var(--orange);
   --accent: var(--orange);
   --on-accent: var(--ink);
@@ -94,6 +100,7 @@
   --fg: var(--ink);
   --muted: var(--muted-light);
   --line: var(--ink);
+  --wave: var(--wave-ink);
   --pop: var(--orange);
   --accent: var(--orange);
   --on-accent: var(--ink);
@@ -111,6 +118,7 @@
   --fg: var(--white);
   --muted: var(--muted-dark);
   --line: var(--orange);
+  --wave: var(--wave-orange);
   --pop: var(--orange);
   --accent: var(--cream);
   --on-accent: var(--ink);
@@ -128,6 +136,7 @@
   --fg: var(--cream);
   --muted: var(--muted-dark);
   --line: var(--orange);
+  --wave: var(--wave-orange);
   --pop: var(--orange);
   --accent: var(--cream);
   --on-accent: var(--ink);
@@ -145,6 +154,7 @@
   --fg: var(--ink);
   --muted: var(--ink);
   --line: var(--ink);
+  --wave: var(--wave-ink);
   --pop: var(--white);
   --accent: var(--white);
   --on-accent: var(--ink);
@@ -162,6 +172,7 @@
   --fg: var(--ink);
   --muted: var(--ink);
   --line: var(--ink);
+  --wave: var(--wave-ink);
   --pop: var(--white);
   --accent: var(--orange);
   --on-accent: var(--ink);
@@ -179,6 +190,7 @@
   --fg: var(--ink);
   --muted: var(--ink);
   --line: var(--ink);
+  --wave: var(--wave-ink);
   --pop: var(--white);
   --accent: var(--orange);
   --on-accent: var(--ink);

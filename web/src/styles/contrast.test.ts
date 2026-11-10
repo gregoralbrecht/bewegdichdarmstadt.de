@@ -2,10 +2,17 @@ import { readFileSync } from "node:fs";
 import { describe, expect, it } from "vitest";
 import { contrastRatio, hexTokens, surfaceTokens } from "../lib/contrast";
 import { surfaces, tagColors } from "../lib/palette";
+import { waveImage } from "../lib/wave";
 
 const css = readFileSync(new URL("./tokens.css", import.meta.url), "utf8");
 const hexes = hexTokens(css);
 const parsed = surfaceTokens(css, hexes);
+// The `--wave-<primitive>: url(…)` images, by primitive name.
+const waves = new Map(
+  [...css.matchAll(/--wave-([\w-]+):\s*(url\([^;]+\))\s*;/g)].map(
+    ([, name, image]) => [name!, image!],
+  ),
+);
 
 const roles = [
   "bg",
@@ -64,11 +71,36 @@ describe("surfaces", () => {
       ).toBeGreaterThanOrEqual(min);
     });
 
+    // The link underline is the surface's line, so it reads like every other line on it.
+    it("points --wave at the wave in its --line", () => {
+      const ref = /^var\(--wave-([\w-]+)\)$/.exec(
+        parsed.get(surface)?.get("wave") ?? "",
+      );
+      if (!ref) throw new Error(`--wave on ${surface} is not var(--wave-…)`);
+      expect(waves.get(ref[1]!)).toBe(waveImage(role(surface, "line")));
+    });
+
     // A button filled with its line color would merge with its own border and shadow.
     it("fills --accent with a color other than --line", () => {
       expect(role(surface, "accent")).not.toBe(role(surface, "line"));
     });
   });
+});
+
+describe("waves", () => {
+  it("declares at least one", () => {
+    expect(waves.size).toBeGreaterThan(0);
+  });
+
+  // The Wave story tunes waveImage()'s defaults; tokens.css must carry the result.
+  it.each([...waves])(
+    "--wave-%s is waveImage() with the defaults",
+    (name, image) => {
+      const hex = hexes.get(name);
+      if (!hex) throw new Error(`--wave-${name} names no hex primitive`);
+      expect(image).toBe(waveImage(hex));
+    },
+  );
 });
 
 describe("tag palette", () => {

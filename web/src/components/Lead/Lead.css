@@ -1,0 +1,6 @@
+/* Margins come from the parent: Prose spaces it like any paragraph. */
+.lead {
+  max-width: 65ch;
+  font-size: var(--step-1);
+  line-height: 1.4;
+}

@@ -2,6 +2,8 @@
 import { Button } from "../components/Button/Button";
 import { Card } from "../components/Card/Card";
 import { Heading } from "../components/Heading/Heading";
+import { Lead } from "../components/Lead/Lead";
+import { Prose } from "../components/Prose/Prose";
 import { Section } from "../components/Section/Section";
 import { Tag } from "../components/Tag/Tag";
 import Base from "../layouts/Base.astro";
@@ -39,28 +41,28 @@ const slots = [
 
 <Base title="Gestaltung" robots="noindex">
   <Section surface="night" aria-labelledby="gestaltung">
-    <div class="stack">
+    <Prose>
       <Heading level={1} id="gestaltung">
         Gestaltung
       </Heading>
-      <p class="lead">
+      <Lead>
         Jede Fläche setzt ihre Farben einmal, und alles darin folgt: Text,
         Links, Buttons, Karten und Schatten. Die Werte sind Platzhalter, bis die
         Palette steht.
-      </p>
+      </Lead>
       <p class="actions">
         <Button variant="hero" href="#flaechen">
           Alle Flächen der Reihe nach ansehen
         </Button>
       </p>
-    </div>
+    </Prose>
   </Section>
 
   <div id="flaechen">
     {surfaces.map((surface) => (
       <Section surface={surface} aria-labelledby={`flaeche-${surface}`}>
         <div class="split">
-          <div class="stack">
+          <Prose>
             <Heading level={2} id={`flaeche-${surface}`}>
               {names[surface]}
             </Heading>
@@ -79,7 +81,7 @@ const slots = [
                 Mehr erfahren
               </Button>
             </p>
-          </div>
+          </Prose>
           <Card>
             <Heading level={3}>Run &amp; Rave</Heading>
             <p>
@@ -98,7 +100,7 @@ const slots = [
   </div>
 
   <Section surface="cream" aria-labelledby="festival">
-    <div class="stack">
+    <Prose>
       <Heading level={2} id="festival">
         Festival-Programm
       </Heading>
@@ -124,11 +126,11 @@ const slots = [
           </li>
         ))}
       </ul>
-    </div>
+    </Prose>
   </Section>
 
   <Section surface="cream" aria-labelledby="tags-titel" id="tags">
-    <div class="stack">
+    <Prose>
       <Heading level={2} id="tags-titel">
         Tag-Palette (WIP)
       </Heading>
@@ -143,24 +145,11 @@ const slots = [
           </li>
         ))}
       </ul>
-    </div>
+    </Prose>
   </Section>
 </Base>
 
 <style>
-  .stack > :global(*) {
-    margin-block: 0 var(--space-4);
-  }
-  .stack > :global(:last-child) {
-    margin-bottom: 0;
-  }
-  p {
-    max-width: 65ch;
-  }
-  .lead {
-    font-size: var(--step-1);
-    line-height: 1.4;
-  }
   .muted {
     color: var(--muted);
     font-size: var(--step--1);
