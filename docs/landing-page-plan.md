@@ -1,6 +1,6 @@
 # Landing page plan
 
-The plan for the first real home page (`/`), planned 2026-11-10. Each component gets its own OpenSpec change; the last change puts the page together. Tick a change's row when it is archived. Delete this file once the landing page ships.
+The plan for the first real home page (`/`), planned 2026-11-10. The page goes up first as a skeleton of bare HTML; then each component gets its own OpenSpec change, which also swaps its bare HTML on `/` for the component. That way the page shows its progress after every change. Tick a change's row when it is archived. Delete this file once the landing page ships.
 
 Names follow [`naming.md`](naming.md).
 
@@ -99,22 +99,26 @@ Facts used: "Jeder Beitrag … hilft uns, die laufenden Kosten zu decken" (old s
 
 ## Changes
 
-In dependency order. One change each; the last one assembles the page.
+In order. One change each.
 
-| Done | #   | Change              | What it covers                                                                                        | Needs   |
-| ---- | --- | ------------------- | ----------------------------------------------------------------------------------------------------- | ------- |
-| [x]  | 1   | `prose-base`        | Text styling: paragraph width, lead, links, lists. Fixes the unstyled `<h1>` on the placeholder pages | –       |
-| [ ]  | 2   | `sticker-card`      | `Card` gets a tilt (`rot`) and one heading link stretched over the card                               | –       |
-| [ ]  | 3   | `card-grid`         | A `<ul>` of cards whose neighbors tilt in opposite directions                                         | 2       |
-| [ ]  | 4   | `cluster`           | A wrapping row for buttons, tags and short items such as the past dates                               | –       |
-| [ ]  | 5   | `when`              | `<time datetime>` with German date formatting                                                         | –       |
-| [ ]  | 6   | `fact-list`         | A `<dl>` of short facts                                                                               | –       |
-| [ ]  | 7   | `events-collection` | Content collection and schema for Run & Rave and festival dates                                       | –       |
-| [ ]  | 8   | `hero`              | h1, lead and the page's one hero button                                                               | 1       |
-| [ ]  | 9   | `event-card`        | A sticker card built from an event entry, with an upcoming and a Winterpause state                    | 2, 5, 7 |
-| [ ]  | 10  | `person-card`       | A team card, with a placeholder until the photo arrives                                               | 2       |
-| [ ]  | 11  | `cta-band`          | A section with a heading, text and one button                                                         | 1       |
-| [ ]  | 12  | `landing-page`      | Sections 1–6 in `index.astro`; the token preview there merges into `/gestaltung`                      | all     |
+`landing-page-skeleton` comes first: sections 1–6 with the draft copy in `index.astro`, as bare HTML (`<h2>`, `<p>`, `<ul>`, `<dl>`, plain links). It uses the pieces that already exist: the base layout, `Section` for the surface colors, `Button`, `Prose` and `Lead`. The token preview on `/` merges into `/gestaltung` in the same change.
+
+Every later change builds its component and replaces the matching bare HTML on `/` (the "Replaces on `/`" column). A change is done when the page uses the component.
+
+| Done | #   | Change                  | What it covers                                                                                        | Replaces on `/`                           | Needs |
+| ---- | --- | ----------------------- | ----------------------------------------------------------------------------------------------------- | ----------------------------------------- | ----- |
+| [x]  | 1   | `prose-base`            | Text styling: paragraph width, lead, links, lists. Fixes the unstyled `<h1>` on the placeholder pages | –                                         | –     |
+| [ ]  | 2   | `landing-page-skeleton` | Sections 1–6 as bare HTML; the token preview merges into `/gestaltung`                                | the token preview                         | 1     |
+| [ ]  | 3   | `hero`                  | h1, lead and the page's one hero button                                                               | section 1                                 | 2     |
+| [ ]  | 4   | `cta-band`              | A section with a heading, text and one button                                                         | section 6                                 | 2     |
+| [ ]  | 5   | `fact-list`             | A `<dl>` of short facts                                                                               | the bare `<dl>` in section 3              | 2     |
+| [ ]  | 6   | `cluster`               | A wrapping row for buttons, tags and short items such as the past dates                               | the past dates in section 4               | 2     |
+| [ ]  | 7   | `when`                  | `<time datetime>` with German date formatting                                                         | the written-out dates in sections 2 and 4 | 2     |
+| [ ]  | 8   | `sticker-card`          | `Card` gets a tilt (`rot`) and one heading link stretched over the card                               | the bare cards in sections 2 and 5        | 2     |
+| [ ]  | 9   | `card-grid`             | A `<ul>` of cards whose neighbors tilt in opposite directions                                         | the card lists in sections 2 and 5        | 8     |
+| [ ]  | 10  | `person-card`           | A team card, with a placeholder until the photo arrives                                               | the person cards in section 5             | 8     |
+| [ ]  | 11  | `events-collection`     | Content collection and schema for Run & Rave and festival dates                                       | the hardcoded dates in sections 2 and 4   | 7     |
+| [ ]  | 12  | `event-card`            | A sticker card built from an event entry, with an upcoming and a Winterpause state                    | the event cards in section 2              | 8, 11 |
 
 After launch: icons, sticker photos, a badge sticker, a notice banner for cancellations, add to calendar.
 
