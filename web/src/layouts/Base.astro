@@ -95,7 +95,8 @@ const { title, robots } = Astro.props;
     position: absolute;
     top: var(--space-3);
     left: var(--gutter);
-    z-index: 1;
+    /* Above the header, which lies over a hero. */
+    z-index: 2;
     padding: var(--space-2) var(--space-4);
     font-weight: 700;
     color: var(--fg);
@@ -107,12 +108,30 @@ const { title, robots } = Astro.props;
     transform: none;
   }
 
-  /* The logo stays in normal flow; the row is as tall as the fixed menu card, so the two line up. */
+  /* The logo stays in normal flow; the row is as tall as the fixed menu card or the logo's one line,
+     so the two line up. */
+  :root {
+    --header-height: calc(
+      max(var(--menu-row), 1.05 * var(--step-1)) + 2 * var(--space-5)
+    );
+  }
   header {
     display: flex;
     align-items: center;
-    min-height: calc(var(--menu-row) + 2 * var(--space-5));
+    min-height: var(--header-height);
     padding-block: var(--space-5);
+  }
+
+  /* A hero paints from the window's top edge, so the header lies over it with no background of its
+     own; the hero pads its content by --header-room. Without :has() the header stays in flow. */
+  body:has(.hero) {
+    --header-room: var(--header-height);
+  }
+  body:has(.hero) header {
+    position: absolute;
+    inset-inline: 0;
+    z-index: 1;
+    height: var(--header-height);
   }
 
   /* On phones the footer runs on under the bottom bar, so the bar never covers its links. */

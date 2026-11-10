@@ -257,7 +257,7 @@ The building blocks:
 - **`Button`** is a static link or `<button>` that draws the shadow, with a `.button__face` inside that is the only part that moves. Labels are Bricolage. It has three variants:
   - `primary` (default): `--accent` fill, `--on-accent` label, `--line` border and shadow; lifts on hover, sinks on press.
   - `secondary`: rises and presses like the primary, filled with the surface's `--bg` so it looks hollow, `--fg` label, one type step smaller.
-  - `hero`: the primary plus two layers in `--hero-1` and `--hero-2`, edged in `--hero-ink`; on hover the second layer jumps out. Always `--step-3`. At most one per page, for the main call to action.
+  - `hero`: the primary plus two layers in `--hero-1` and `--hero-2`, edged in `--hero-ink`; on hover the second layer jumps out. `--step-2`, like the primary. At most one per page, for the main call to action.
 - **Sizes.** The default is `--step-2` (secondary `--step-1`); `size="small"` is `--step-0` (secondary `--step--1`), for card actions. Two secondaries side by side are therefore equal.
 - **Buttons fit their column.** A button and its shadow are never wider than the column; long labels wrap with hyphenation, never truncate. Every button's hit area is at least 44px tall.
 - **A hero never sits next to another button.** Primary and secondary pair freely.
@@ -270,6 +270,11 @@ The building blocks:
   - Headings inside it stay `Heading`; `Prose` doesn't style them.
   - It styles only plain elements: a link or list with a class (`Button`, `Card`, a styled list) keeps its own styles.
 - **`Lead`** is the `<p class="lead">` under a heading: `--step-1` (lead text in the type scale), line height 1.4, capped at `65ch`. It works inside `Prose` or alone, like the hero's lead.
+- **`Hero`** is the top band of a page, at most one per page: its own `Section` (default `pink`) named by its `Heading level={1}`, then the `lead`, an optional note as children, and the page's one hero `Button` to `href`.
+  - On a page with a hero, the header lies transparent over it: `Base.astro` sets `--header-room` to `--header-height` under `body:has(.hero)`, and the hero adds it to its top padding, so the surface runs unbroken from the window's top edge behind logo and menu. Logo and menu stay in `<header>`.
+  - Light surfaces only, because the header keeps the body's ink roles; `surface` excludes `night` and `ink`.
+  - Bottom padding is `--space-8`.
+  - The label is the `action` slot. It never hyphenates (`hyphens: manual`), so mark break points in handles and long words with `<wbr>`: `Folge @beweg<wbr />dich<wbr />darmstadt`. In Astro pass it as one string, `<Fragment slot="action" set:html="…" />`, because Prettier would otherwise break the line at each `<wbr>` and the breaks render as spaces.
 - **`MainMenu`** is the main navigation in `Base.astro`'s header, built from the list in `web/src/lib/menu.ts`. To add a page to the menu, add an item there; both lists below pick it up.
   - From `66em` (wide enough for the logo beside it): a white sticker card (`data-surface="white"`, `--border`, `--shadow`, `--radius-card`), fixed and centered at the top. It never tilts. A `--menu-cut` ring in cream wraps the card and its shadow like a die-cut sticker, so the edge reaches 3:1 over every surface: ink meets cream, cream meets night and ink. Cream is a primitive here on purpose.
   - Below `66em`: a "Menü" button in the same card at the bottom edge (above the safe area) opens a bottom sheet with the same links. The button and sheet are `MenuDrawer`, a React Aria island that `Base.astro` passes to `MainMenu` as its child and hydrates on phones only (`client:media`), so desktop ships no JavaScript for it. Escape, "Schließen", a tap outside or swiping the sheet down (from the handle bar, or from the list once it's scrolled to the top) close it, and focus returns to "Menü". A drag past a third of the sheet's height or a flick closes it; a shorter one springs back. Under reduced motion the sheet still follows the finger, but opens, closes and settles back with a fade.

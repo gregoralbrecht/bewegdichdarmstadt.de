@@ -140,8 +140,17 @@ export const SecondaryOnOrange: Story = {
 export const Hero: Story = {
   args: { variant: "hero", href: "#mitmachen", children: "Mitmachen" },
   decorators: [on("cream")],
-  play: async ({ canvas }) => {
+  play: async ({ canvas, canvasElement }) => {
     const hero = canvas.getByRole("link", { name: "Mitmachen" });
+    // The layers set the hero apart, not its size: it matches a default primary.
+    const primary = document.createElement("a");
+    primary.className = "button";
+    canvasElement.append(primary);
+    await expect(getComputedStyle(hero).fontSize).toBe(
+      getComputedStyle(primary).fontSize,
+    );
+    primary.remove();
+
     const browser = await realBrowser();
     if (!browser) return;
 

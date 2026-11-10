@@ -97,7 +97,6 @@
 .button[data-variant="hero"] {
   --lift: var(--depth);
   --reach: calc(3 * var(--depth));
-  font-size: var(--step-3);
 }
 .button[data-variant="hero"]::before,
 .button[data-variant="hero"]::after {

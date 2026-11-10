@@ -1,0 +1,16 @@
+/* On a page with a hero, Base.astro lays the header over it and sets --header-room to the header's
+   height, so the surface starts at the window's top edge. On top of that room: Section's own
+   --space-7. */
+.section.hero {
+  padding-block: calc(var(--header-room, 0px) + var(--space-7)) var(--space-8);
+}
+
+/* Room for the hero's two layers, which reach three --depth past the face. */
+.hero__action {
+  padding-block: var(--space-2) var(--space-4);
+}
+
+/* Only spaces and <wbr> break the label: a hyphen inside a handle reads as a different account. */
+.hero__action .button__face {
+  hyphens: manual;
+}

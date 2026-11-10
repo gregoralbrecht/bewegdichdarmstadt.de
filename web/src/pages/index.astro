@@ -1,6 +1,7 @@
 ---
 import { Button } from "../components/Button/Button";
 import { Heading } from "../components/Heading/Heading";
+import { Hero } from "../components/Hero/Hero";
 import { Lead } from "../components/Lead/Lead";
 import { Prose } from "../components/Prose/Prose";
 import { Section } from "../components/Section/Section";
@@ -10,28 +11,23 @@ import Base from "../layouts/Base.astro";
 ---
 
 <Base>
-  <Section surface="pink" aria-labelledby="titel">
-    <Prose>
-      <Heading level={1} id="titel">
-        Beweg dich, Darmstadt!
-      </Heading>
-      <Lead>
-        Wir gehen gemeinsam auf die Straße: laufend, mit dem Rad oder tanzend,
-        mit Musik, durch Darmstadt. Kostenlos und für alle.
-      </Lead>
-      <p>
-        Gerade ist Winterpause. Auf Instagram erfährst du, wann es weitergeht.
-      </p>
-      <p class="actions">
-        <Button
-          variant="hero"
-          href="https://www.instagram.com/bewegdichdarmstadt/"
-        >
-          Folge @bewegdichdarmstadt
-        </Button>
-      </p>
-    </Prose>
-  </Section>
+  <Hero
+    title="Beweg dich, Darmstadt!"
+    href="https://www.instagram.com/bewegdichdarmstadt/"
+  >
+    <Fragment slot="lead">
+      Wir gehen gemeinsam auf die Straße: laufend, mit dem Rad oder tanzend, mit
+      Musik, durch Darmstadt. Kostenlos und für alle.
+    </Fragment>
+    <p>
+      Gerade ist Winterpause. Auf Instagram erfährst du, wann es weitergeht.
+    </p>
+    {/* One string, so formatting can't put spaces between the <wbr> parts. */}
+    <Fragment
+      slot="action"
+      set:html="Folge @beweg<wbr />dich<wbr />darmstadt"
+    />
+  </Hero>
 
   <Section surface="cream" aria-labelledby="termine">
     <Prose>
