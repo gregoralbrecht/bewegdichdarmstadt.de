@@ -1,4 +1,5 @@
 ---
+import { getCollection, getEntry } from "astro:content";
 import { Button } from "../components/Button/Button";
 import { Card, CardLink } from "../components/Card/Card";
 import { CardGrid } from "../components/CardGrid/CardGrid";
@@ -13,6 +14,18 @@ import { Prose } from "../components/Prose/Prose";
 import { Section } from "../components/Section/Section";
 import { When } from "../components/When/When";
 import Base from "../layouts/Base.astro";
+import { today } from "../lib/date";
+import { pastByYear } from "../lib/events";
+
+const bisher = pastByYear(
+  (await getCollection("events")).map(({ data }) => data),
+  "run-and-rave",
+  today(),
+);
+const festival = await getEntry("events", "festival-2027");
+if (!festival) {
+  throw new Error('No "festival-2027" in src/content/events.yaml');
+}
 
 // Bare HTML for now: each change in docs/landing-page-plan.md swaps its part for a component.
 ---
@@ -58,8 +71,8 @@ import Base from "../layouts/Base.astro";
             </Heading>
             <p>Save the Date</p>
             <p>
-              <When date="2027-09-11" weekday year />, 14 bis 18 Uhr, bei
-              Menschenskinder in Darmstadt-Kranichstein.
+              <When date={festival.data.date} weekday year />, 14 bis 18 Uhr,
+              bei Menschenskinder in Darmstadt-Kranichstein.
             </p>
           </Card>
         </li>
@@ -93,21 +106,18 @@ import Base from "../layouts/Base.astro";
       <Heading level={2} id="bisher">
         Bisher
       </Heading>
-      <p id="run-and-rave-2026">Run &amp; Rave 2026</p>
-      <Cluster as="ul" aria-labelledby="run-and-rave-2026">
-        <li>
-          <When date="2026-07-10" />
-        </li>
-        <li>
-          <When date="2026-08-20" />
-        </li>
-        <li>
-          <When date="2026-09-24" />
-        </li>
-        <li>
-          <When date="2026-10-30" />
-        </li>
-      </Cluster>
+      {bisher.map(({ year, dates }) => (
+        <>
+          <p id={`run-and-rave-${year}`}>Run &amp; Rave {year}</p>
+          <Cluster as="ul" aria-labelledby={`run-and-rave-${year}`}>
+            {dates.map((date) => (
+              <li>
+                <When date={date} />
+              </li>
+            ))}
+          </Cluster>
+        </>
+      ))}
       <p>Festival 2025 auf dem Friedensplatz</p>
     </Prose>
   </Section>

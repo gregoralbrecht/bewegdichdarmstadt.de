@@ -1,0 +1,17 @@
+# Every event date on the site. See docs/content.md for how to add one.
+# The dates come from the old site (source/content.md) and are unconfirmed until the founders confirm them.
+run-and-rave-2026-07-10:
+  kind: run-and-rave
+  date: "2026-07-10"
+run-and-rave-2026-08-20:
+  kind: run-and-rave
+  date: "2026-08-20"
+run-and-rave-2026-09-24:
+  kind: run-and-rave
+  date: "2026-09-24"
+run-and-rave-2026-10-30:
+  kind: run-and-rave
+  date: "2026-10-30"
+festival-2027:
+  kind: festival
+  date: "2027-09-11"

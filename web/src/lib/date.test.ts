@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { formatDate } from "./date";
+import { formatDate, isIsoDate, today } from "./date";
 
 describe("formatDate", () => {
   it("shows day and month by default", () => {
@@ -25,5 +25,23 @@ describe("formatDate", () => {
     expect(() => formatDate("2027-02-30")).toThrow(RangeError);
     expect(() => formatDate("11.09.2027")).toThrow(RangeError);
     expect(() => formatDate("")).toThrow(RangeError);
+  });
+});
+
+describe("isIsoDate", () => {
+  it("accepts a real day", () => {
+    expect(isIsoDate("2027-09-11")).toBe(true);
+  });
+
+  it("rejects days that don't exist and other forms", () => {
+    expect(isIsoDate("2027-02-30")).toBe(false);
+    expect(isIsoDate("11.09.2027")).toBe(false);
+    expect(isIsoDate("")).toBe(false);
+  });
+});
+
+describe("today", () => {
+  it("is an ISO date", () => {
+    expect(today()).toMatch(/^\d{4}-\d{2}-\d{2}$/);
   });
 });
