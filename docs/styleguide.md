@@ -124,19 +124,20 @@ A sticker card is a bordered, shadowed card tilted between -3° and 3°, so it l
 Look:
 
 - `--border`, `--shadow`, a white or accent surface.
-- Tilt set per card with a `--rot` custom property (as in the pitch), between -3° and 3°.
+- Tilt set per card with `Card`'s `tilt`, which sets `--tilt`, between -3° and 3°.
 - Neighbors tilt in opposite directions; never two in a row the same way.
 - Optional extras: a tape strip on one corner, a small badge sticker overlapping the edge.
 
 What may tilt:
 
-- **Yes:** cards, badges, images, short headlines (up to about 5 words).
-- **No:** paragraphs, forms, inputs, navigation, tables, dates and times inside a card. These stay straight; tilt the card, then counter-rotate long content if needed.
+- **Yes:** cards, badges, images, short headlines (up to about 5 words). Everything inside a tilted card tilts with it, paragraphs and dates included: counter-rotated text inside a crooked card looks wrong.
+- **No:** forms, inputs, navigation and tables, and running text outside a card.
 
 Markup:
 
 - A group of cards is a `<ul>` with one `<li>` per card, and the card is an `<article>` with a real heading.
 - The whole card is clickable through **one** link on the heading, stretched over the card with a pseudo-element. No nested links or buttons.
+- Only a card with a link moves on hover and press. A card without one (a person, say) tilts but stays put, because things you can't click don't move.
 - Decorative extras (tape, doodles) are CSS or `aria-hidden` SVG.
 - Dates use `<time datetime>`.
 
@@ -191,25 +192,25 @@ Layout:
 
 Radius has three steps, one per kind of thing, plus one for the focus ring:
 
-| Token              | Value  | Use                       |
-| ------------------ | ------ | ------------------------- |
-| `--radius-control` | 0      | Buttons and inputs: sharp |
-| `--radius-card`    | 1.5rem | Cards: very round         |
-| `--radius-tag`     | 999px  | Tags: pill                |
-| `--radius-focus`   | 0.5rem | Focus rings: every shape  |
+| Token              | Value  | Use                                          |
+| ------------------ | ------ | -------------------------------------------- |
+| `--radius-control` | 0      | Buttons, inputs and cards with a link: sharp |
+| `--radius-card`    | 1.5rem | Cards without a link: very round             |
+| `--radius-tag`     | 999px  | Tags: pill                                   |
+| `--radius-focus`   | 0.5rem | Focus rings: every shape                     |
 
 ## Motion and micro-interactions
 
 Motion is small, springy and physical: things press, wiggle and settle. It is CSS-first, with a motion library only for complex cases like dialog enter and exit, and always has a reduced-motion version (library animations included).
 
-The core pattern is the **press**. For cards:
+The core pattern is the **press**: the shadow stays put and only the face moves, so the gap to the shadow grows on hover and closes on press. For cards with a link:
 
-| State          | Transform               | Shadow                        |
-| -------------- | ----------------------- | ----------------------------- |
-| Rest           | none                    | `--shadow` (8px)              |
-| Hover          | `translate(-2px, -2px)` | 10px                          |
-| Active (press) | `translate(8px, 8px)`   | 0                             |
-| Focus-visible  | none                    | `--shadow` plus focus outline |
+| State          | Face transform          | Shadow                                   |
+| -------------- | ----------------------- | ---------------------------------------- |
+| Rest           | none                    | `--shadow` (8px)                         |
+| Hover          | `translate(-2px, -2px)` | unchanged, 10px from the lifted face     |
+| Active (press) | `translate(8px, 8px)`   | unchanged; the face covers it            |
+| Focus-visible  | none                    | unchanged, focus outline around the card |
 
 Buttons press in `em`, so the shadow grows with the label, each value rounded to whole pixels with `round(…, 1px)`. The shadow stays put; only the face moves:
 
@@ -228,7 +229,7 @@ Timing:
 
 Allowed extras, each used sparingly:
 
-- Sticker wiggle on hover (rotate to `--rot` plus or minus 2°).
+- Sticker wiggle on hover (rotate to `--tilt` plus or minus 2°).
 - Marquee ticker for announcements, pausable and with a pause button.
 - Small celebrations (confetti, emoji burst) only after an action, such as adding an event to a calendar.
 
@@ -263,6 +264,8 @@ The building blocks:
 - **A hero never sits next to another button.** Primary and secondary pair freely.
 - **`Heading`** level 1 gets one hard text shadow in `--pop`.
 - **`Card`** is an `<article>` with a white body (`data-surface="white"`) inside a frame whose `--line` border and shadow come from the surface around it: ink on cream, orange on night. `fill` gives the body a tag-palette color, only when the color carries meaning and only on light surfaces.
+  - `tilt` (`-3` to `3`, no `0`) tilts the whole card by that many degrees through `--tilt`.
+  - `CardLink` is the card's one link, inside its heading: its `::after` covers the face, border included. A card with one is a control, so it takes `--radius-control` like a button, and its focus ring is a round dotted box 3px outside the face's border, following the tilt. Hover and press key off the link, so they start exactly where a click lands, never on the shadow. Like `Button`, the card never moves: its `::before` is the shadow and `.card__body` is the face, the only part that moves; the link's hit area moves against it, so the pointer never drops out at the edge. Only a card holding a `CardLink` presses. Under reduced motion the face stays still: hover widens the shadow by 2px, press hides it.
 - **`Tag`** is a pill with a tag-palette `color`, ink text and a thin ink border, on any surface. The word carries the meaning, the color helps scanning.
 - **`Prose`** wraps running text in a `<div class="prose">`. It zeroes its children's margins and spaces them with `--space-4`, caps paragraphs and list items at `65ch`, and gives `<ul>` and `<ol>` bullets and numbers in an indent that stays inside the column at 320px.
   - Links are bold `--fg` with a wavy underline: the surface's `--wave` as a `repeat-x` background, cloned onto every line of a wrapping link. On hover (on devices that can hover) the wave rolls one period per `--wave-speed`. Under reduced motion it doesn't roll; hover swaps it for a straight `--line` bar `--wave-line` thick through the wave's middle. The global dotted focus ring stays.

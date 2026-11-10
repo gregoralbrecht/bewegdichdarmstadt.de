@@ -1,5 +1,6 @@
 ---
 import { Button } from "../components/Button/Button";
+import { Card, CardLink } from "../components/Card/Card";
 import { Cluster } from "../components/Cluster/Cluster";
 import { CtaBand } from "../components/CtaBand/CtaBand";
 import { FactList } from "../components/FactList/FactList";
@@ -40,25 +41,25 @@ import Base from "../layouts/Base.astro";
       </Heading>
       <ul>
         <li>
-          <article>
+          <Card tilt={-2}>
             <Heading level={3}>
-              <a href="/run-and-rave">Run &amp; Rave</a>
+              <CardLink href="/run-and-rave">Run &amp; Rave</CardLink>
             </Heading>
             <p>Winterpause</p>
             <p>Die Runden für 2026 sind gelaufen. Neue Termine folgen 2027.</p>
-          </article>
+          </Card>
         </li>
         <li>
-          <article>
+          <Card tilt={2}>
             <Heading level={3}>
-              <a href="/festival">Festival 2027</a>
+              <CardLink href="/festival">Festival 2027</CardLink>
             </Heading>
             <p>Save the Date</p>
             <p>
               <When date="2027-09-11" weekday year />, 14 bis 18 Uhr, bei
               Menschenskinder in Darmstadt-Kranichstein.
             </p>
-          </article>
+          </Card>
         </li>
       </ul>
     </Prose>
@@ -120,21 +121,21 @@ import Base from "../layouts/Base.astro";
       </p>
       <ul>
         <li>
-          <article>
+          <Card tilt={2}>
             <Heading level={3}>Steffi Rieger</Heading>
             <p>Foto folgt</p>
             <p>Yogalehrerin, Unternehmerin und Life &amp; Team Coach</p>
-          </article>
+          </Card>
         </li>
         <li>
-          <article>
+          <Card tilt={-2}>
             <Heading level={3}>Lea Emmel</Heading>
             <p>Foto folgt</p>
             <p>
               Gründerin von Outdoor Training Darmstadt und zertifizierte
               Trainerin
             </p>
-          </article>
+          </Card>
         </li>
       </ul>
       <p class="actions">

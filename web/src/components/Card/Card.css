@@ -1,17 +1,116 @@
-/* A white island on any surface: the outer frame reads --line from the parent surface, so the
-   shadow is ink on cream and orange on night, while the body is always white inside. The frame's own
-   background fills the antialiased seam between the body's rounded corner and the border. */
+/* A white island on any surface. Like Button, the card itself never moves: its ::before is the shadow
+   and .card__body is the face, the only part that moves. --frame takes --line from the parent surface
+   here, so the border and shadow are ink on cream and orange on night, while the face's own
+   data-surface keeps it white inside. */
 .card {
-  background: var(--line);
-  border: var(--border) solid var(--line);
+  --frame: var(--line);
+  /* The face's travel: --shadow's offset, and the lift on hover. */
+  --depth: 8px;
+  --lift: 2px;
+  position: relative;
+  isolation: isolate;
   border-radius: var(--radius-card);
-  box-shadow: var(--shadow) var(--line);
+  /* The sticker tilt from the tilt prop; everything inside tilts with the card, the shadow too. */
+  transform: rotate(var(--tilt, 0deg));
 }
 
-.card__body {
+.card::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background: var(--frame);
+  border-radius: inherit;
+  transform: translate(var(--depth), var(--depth));
+}
+
+/* Under the border the face is --frame, not white: on a tilted edge the white would bleed through the
+   border's antialiased pixels as a thin light line. */
+.card > .card__body {
+  position: relative;
   height: 100%;
   padding: var(--space-5);
-  border-radius: calc(var(--radius-card) - 3px);
+  background:
+    linear-gradient(var(--bg), var(--bg)) padding-box,
+    var(--frame) border-box;
+  border: var(--border) solid var(--frame);
+  border-radius: inherit;
+}
+
+/* A card you can click is a control, so it's sharp like a button. */
+.card:has(.card__link) {
+  border-radius: var(--radius-control);
+}
+
+/* The card's one link, stretched over the whole face, border included. Hover and press key off the
+   link, so they start exactly where a click would land: not on the shadow. */
+.card__link {
+  color: inherit;
+  text-decoration: none;
+}
+.card__link::after {
+  content: "";
+  position: absolute;
+  inset: calc(-1 * var(--border));
+}
+
+/* The ring goes around the card and stays put, following the tilt. Like Button's, the card stays
+   sharp and the ring is its own box with round corners, 3px outside the face's border. */
+.card__link:focus-visible {
+  outline: none;
+}
+.card:has(.card__link:focus-visible)::after {
+  content: "";
+  position: absolute;
+  inset: -6px;
+  border: 3px dotted var(--focus);
+  border-radius: var(--radius-focus);
+  pointer-events: none;
+}
+
+/* The press. The hit area moves against the face, so it stays where the card is and the pointer
+   never drops out at the edge. */
+.card:has(.card__link) .card__body,
+.card__link::after {
+  transition: transform var(--dur) var(--ease-spring);
+}
+.card:has(.card__link:hover) .card__body {
+  transform: translate(calc(-1 * var(--lift)), calc(-1 * var(--lift)));
+}
+.card__link:hover::after {
+  transform: translate(var(--lift), var(--lift));
+}
+/* The face lands exactly on the shadow. */
+.card:has(.card__link:active) .card__body {
+  transform: translate(var(--depth), var(--depth));
+  transition-duration: var(--dur-fast);
+}
+.card__link:active::after {
+  transform: translate(calc(-1 * var(--depth)), calc(-1 * var(--depth)));
+  transition-duration: var(--dur-fast);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  /* Feedback without movement: hover widens the shadow by the lift, press hides it. */
+  .card:has(.card__link) .card__body,
+  .card__link::after {
+    transition: none;
+  }
+  .card:has(.card__link:hover) .card__body,
+  .card:has(.card__link:active) .card__body,
+  .card__link:hover::after,
+  .card__link:active::after {
+    transform: none;
+  }
+  .card:has(.card__link:hover)::before {
+    transform: translate(
+      calc(var(--depth) + var(--lift)),
+      calc(var(--depth) + var(--lift))
+    );
+  }
+  .card:has(.card__link:active)::before {
+    opacity: 0;
+  }
 }
 
 .card__body > :first-child {

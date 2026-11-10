@@ -1,6 +1,6 @@
 ---
 import { Button } from "../components/Button/Button";
-import { Card } from "../components/Card/Card";
+import { Card, CardLink } from "../components/Card/Card";
 import { Heading } from "../components/Heading/Heading";
 import { Lead } from "../components/Lead/Lead";
 import { Prose } from "../components/Prose/Prose";
@@ -224,23 +224,15 @@ const sample = "„Lauf mit!“ – Größe, Mühe, Spaß: Äpfel, Öfen, Überm
       <Heading level={2} id="sticker">
         Sticker-Karte
       </Heading>
-      <ul class="stickers" role="list">
-        <li>
-          <article class="sticker" style="--rot: -2deg">
-            <Heading level={3} size="1">
-              <a class="sticker-link" href="#sticker">
-                Run &amp; Rave
-              </a>
-            </Heading>
-            <p>
-              <time datetime="2026-10-30T19:00">
-                Freitag, 30. Oktober, 19 Uhr
-              </time>
-            </p>
-            <p>Fünf Kilometer durch die Stadt, danach Musik. Drück mich.</p>
-          </article>
-        </li>
-      </ul>
+      <Card tilt={-2}>
+        <Heading level={3} size="1">
+          <CardLink href="#sticker">Run &amp; Rave</CardLink>
+        </Heading>
+        <p>
+          <time datetime="2026-10-30T19:00">Freitag, 30. Oktober, 19 Uhr</time>
+        </p>
+        <p>Fünf Kilometer durch die Stadt, danach Musik. Drück mich.</p>
+      </Card>
     </Prose>
   </Section>
 
@@ -426,63 +418,5 @@ const sample = "„Lauf mit!“ – Größe, Mühe, Spaß: Äpfel, Öfen, Überm
     height: var(--space-5);
     background: var(--orange);
     border: var(--border-thin) solid var(--line);
-  }
-
-  /* The sticker-card prototype, kept as the reference for its change. Not .card, which is Card's. */
-  .stickers {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(min(100%, 20rem), 1fr));
-    padding: var(--space-4);
-  }
-  .sticker {
-    position: relative;
-    background: var(--pink);
-    border: var(--border) solid var(--line);
-    box-shadow: var(--shadow) var(--line);
-    padding: var(--space-5);
-    transform: rotate(var(--rot));
-    transition: transform var(--dur) var(--ease-spring);
-  }
-  .sticker > * {
-    margin: 0;
-  }
-  .sticker > * + * {
-    margin-top: var(--space-3);
-  }
-  .sticker-link {
-    color: inherit;
-    text-decoration: none;
-  }
-  /* One link per card, stretched over the whole card. */
-  .sticker-link::after {
-    content: "";
-    position: absolute;
-    inset: 0;
-  }
-  .sticker-link:focus-visible {
-    outline: none;
-  }
-  .sticker:has(.sticker-link:focus-visible) {
-    outline: 3px dotted var(--focus);
-    outline-offset: 3px;
-  }
-  .sticker:hover {
-    transform: translate(-2px, -2px) rotate(var(--rot));
-    box-shadow: 10px 10px 0 var(--line);
-  }
-  .sticker:active {
-    transform: translate(8px, 8px) rotate(var(--rot));
-    box-shadow: none;
-    transition-duration: var(--dur-fast);
-  }
-
-  @media (prefers-reduced-motion: reduce) {
-    /* Keep the shadow change, drop the movement. */
-    .sticker,
-    .sticker:hover,
-    .sticker:active {
-      transform: rotate(var(--rot));
-      transition: none;
-    }
   }
 </style>
