@@ -8,6 +8,7 @@ import { FactList } from "../components/FactList/FactList";
 import { Heading } from "../components/Heading/Heading";
 import { Hero } from "../components/Hero/Hero";
 import { Lead } from "../components/Lead/Lead";
+import { PersonCard } from "../components/PersonCard/PersonCard";
 import { Prose } from "../components/Prose/Prose";
 import { Section } from "../components/Section/Section";
 import { When } from "../components/When/When";
@@ -122,21 +123,17 @@ import Base from "../layouts/Base.astro";
       </p>
       <CardGrid>
         <li>
-          <Card>
-            <Heading level={3}>Steffi Rieger</Heading>
-            <p>Foto folgt</p>
+          <PersonCard name="Steffi Rieger">
             <p>Yogalehrerin, Unternehmerin und Life &amp; Team Coach</p>
-          </Card>
+          </PersonCard>
         </li>
         <li>
-          <Card>
-            <Heading level={3}>Lea Emmel</Heading>
-            <p>Foto folgt</p>
+          <PersonCard name="Lea Emmel">
             <p>
               Gründerin von Outdoor Training Darmstadt und zertifizierte
               Trainerin
             </p>
-          </Card>
+          </PersonCard>
         </li>
       </CardGrid>
       <p class="actions">

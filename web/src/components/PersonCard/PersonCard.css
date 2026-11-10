@@ -1,0 +1,39 @@
+/* The name comes first in the markup, so it opens the card for screen readers; the photo shows above
+   it. A flex column doesn't collapse margins, so the parts take Prose's spacing as a gap instead. */
+.person-card > .card__body {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+}
+
+.person-card > .card__body > * {
+  margin-block: 0;
+}
+
+/* Square, so it fits a two-column CardGrid at any width. The overflow keeps a tall photo from
+   stretching the frame past its ratio. */
+.person-card__photo {
+  order: -1;
+  aspect-ratio: 1;
+  overflow: hidden;
+  border: var(--border-thin) solid var(--line);
+}
+
+.person-card__photo img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* Until the photo arrives, the frame says so, for everyone. */
+.person-card__photo[data-placeholder] {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-style: dashed;
+  color: var(--muted);
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: var(--step-0);
+}

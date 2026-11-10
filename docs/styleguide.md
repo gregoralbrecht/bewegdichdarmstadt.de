@@ -297,6 +297,11 @@ The building blocks:
   - A grid of `repeat(auto-fill, minmax(min(100%, 15rem), 1fr))`, gaps `--space-6` between rows and `--space-5` between columns, one column at 320px. Cards in a row stretch to the same height. The list reset has zero specificity, so spacing from `Prose` still applies.
   - Tilts alternate by index in a cycle of four: `-2deg`, `2deg`, `-3deg`, `1deg` on `--tilt`, so neighbors turn opposite ways and cards two apart by different amounts. A `Card` without `tilt` inherits it; an explicit `tilt` wins.
   - By index, because CSS can't see the column count: with an even number of columns, cards above each other turn the same way, though by different amounts in a two-column grid.
+- **`PersonCard`** is a team card: a `Card` without a link, so it tilts but never moves. `name` is its `h3`, children are the one line, and other `Card` props pass through, `tilt` included.
+  - The name comes first in the markup, so it opens the card for screen readers; the photo shows above it (`order: -1`) in a square frame with a `--border-thin` solid `--line` border. A photo fills the frame with `object-fit: cover`.
+  - `photo` is a slot (`<Fragment slot="photo">` in Astro), so it can be Astro's `<Image>`. The photo's `alt` comes with the photo.
+  - Without `photo`, the frame is a placeholder: a dashed border and "Foto folgt" centered in `--muted`, `--font-display` 700 at `--step-0`. Real text, so it is marked for everyone until the photo arrives.
+  - The parts are spaced with a `--space-4` gap, as in `Prose`.
 - **`When`** is a date: every date on the site goes through it. `date` takes the ISO date (`"2027-09-11"`) and renders `<time datetime="2027-09-11">11. September</time>`. Other `<time>` props pass through.
   - `weekday` adds the weekday and `year` the year: `<When date="2027-09-11" weekday year />` reads "Samstag, 11. September 2027".
   - The text comes from `formatDate` in `web/src/lib/date.ts` (`Intl.DateTimeFormat("de-DE")`, in UTC so the day never shifts). A date that isn't a real `YYYY-MM-DD` day throws, so a typo fails the build.

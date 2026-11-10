@@ -10,10 +10,17 @@ export type Props = ComponentPropsWithoutRef<"article"> & {
 };
 
 /** An `<article>` card: a white body inside a frame whose shadow follows the parent surface. */
-export function Card({ fill, tilt, style, children, ...props }: Props) {
+export function Card({
+  fill,
+  tilt,
+  className,
+  style,
+  children,
+  ...props
+}: Props) {
   return (
     <article
-      className="card"
+      className={className ? `card ${className}` : "card"}
       data-fill={fill}
       style={
         tilt === undefined
