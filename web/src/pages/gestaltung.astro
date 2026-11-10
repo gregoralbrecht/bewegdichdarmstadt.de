@@ -8,11 +8,12 @@ import { Section } from "../components/Section/Section";
 import { Tag } from "../components/Tag/Tag";
 import Base from "../layouts/Base.astro";
 import { contrastRatio, hexTokens, surfaceTokens } from "../lib/contrast";
-import { surfaces, tagNames, type Surface } from "../lib/palette";
+import { primitives, surfaces, tagNames, type Surface } from "../lib/palette";
 import tokensCss from "../styles/tokens.css?raw";
 
 // Preview of the surface system for the palette meeting with the client; not for search engines.
-const roles = surfaceTokens(tokensCss, hexTokens(tokensCss));
+const hex = hexTokens(tokensCss);
+const roles = surfaceTokens(tokensCss, hex);
 const ratio = new Intl.NumberFormat("de", {
   minimumFractionDigits: 1,
   maximumFractionDigits: 1,
@@ -21,6 +22,9 @@ const contrast = (surface: Surface, role: string) => {
   const r = roles.get(surface)!;
   return ratio.format(contrastRatio(r.get(role)!, r.get("bg")!));
 };
+// Every primitive and tag color against ink, the text they carry.
+const withInk = (token: string) =>
+  ratio.format(contrastRatio(hex.get("ink")!, hex.get(token)!));
 
 const names: Record<Surface, string> = {
   cream: "Creme",
@@ -37,6 +41,11 @@ const slots = [
   { time: "15:30", title: "Tanz-Workshop", kind: "Tanz", fill: "peach" },
   { time: "17:00", title: "Staffellauf", kind: "Laufen", fill: "lime" },
 ] as const;
+
+const shadows = ["shadow-sm", "shadow", "shadow-lg"];
+const steps = ["step-4", "step-3", "step-2", "step-1", "step-0", "step--1"];
+const spaces = [1, 2, 3, 4, 5, 6, 7, 8].map((n) => `space-${n}`);
+const sample = "„Lauf mit!“ – Größe, Mühe, Spaß: Äpfel, Öfen, Übermut.";
 ---
 
 <Base title="Gestaltung" robots="noindex">
@@ -99,6 +108,142 @@ const slots = [
     ))}
   </div>
 
+  <Section surface="cream" aria-labelledby="farben">
+    <Prose>
+      <Heading level={2} id="farben">
+        Farben
+      </Heading>
+      <ul class="grid" role="list">
+        {primitives.map(({ token, role, wip }) => (
+          <li class="swatch">
+            <div
+              class="chip"
+              style={`background: var(--${token})`}
+              aria-hidden="true"
+            />
+            <Heading level={3} size="1">
+              <code>--{token}</code>
+            </Heading>
+            <p>
+              <code>{hex.get(token)}</code> · {role}
+              {wip && " (WIP)"}
+            </p>
+            <p class="pair">Kontrast mit ink: {withInk(token)}</p>
+          </li>
+        ))}
+      </ul>
+    </Prose>
+  </Section>
+
+  <Section surface="cream" aria-labelledby="schatten">
+    <Prose>
+      <Heading level={2} id="schatten">
+        Schatten und Rahmen
+      </Heading>
+      <ul class="grid" role="list">
+        {shadows.map((token) => (
+          <li class="box" style={`box-shadow: var(--${token}) var(--line)`}>
+            <code>--{token}</code>
+          </li>
+        ))}
+        <li class="box">
+          <code>--border</code>
+        </li>
+        <li class="box thin">
+          <code>--border-thin</code>
+        </li>
+        <li class="box pill">
+          <code>--radius-tag</code>
+        </li>
+      </ul>
+    </Prose>
+  </Section>
+
+  <Section surface="cream" aria-labelledby="schriften">
+    <Prose>
+      <Heading level={2} id="schriften">
+        Schriften
+      </Heading>
+      <p class="font-sample display">
+        <span class="label">
+          Bricolage Grotesque, <code>--font-display</code>
+        </span>
+        {sample}
+      </p>
+      <p class="font-sample">
+        <span class="label">
+          Figtree, <code>--font-text</code>
+        </span>
+        {sample}
+      </p>
+    </Prose>
+  </Section>
+
+  <Section surface="cream" aria-labelledby="typo">
+    <Prose>
+      <Heading level={2} id="typo">
+        Schriftgrößen
+      </Heading>
+      <ul class="stack" role="list">
+        {steps.map((token) => (
+          <li>
+            <span class="label">
+              <code>--{token}</code>
+            </span>
+            <span class="step" style={`font-size: var(--${token})`}>
+              Beweg dich
+            </span>
+          </li>
+        ))}
+      </ul>
+    </Prose>
+  </Section>
+
+  <Section surface="cream" aria-labelledby="abstaende">
+    <Prose>
+      <Heading level={2} id="abstaende">
+        Abstände
+      </Heading>
+      <ul class="stack" role="list">
+        {spaces.map((token) => (
+          <li class="space">
+            <code>--{token}</code>
+            <span
+              class="bar"
+              style={`width: var(--${token})`}
+              aria-hidden="true"
+            />
+          </li>
+        ))}
+      </ul>
+    </Prose>
+  </Section>
+
+  <Section surface="cream" aria-labelledby="sticker">
+    <Prose>
+      <Heading level={2} id="sticker">
+        Sticker-Karte
+      </Heading>
+      <ul class="stickers" role="list">
+        <li>
+          <article class="sticker" style="--rot: -2deg">
+            <Heading level={3} size="1">
+              <a class="sticker-link" href="#sticker">
+                Run &amp; Rave
+              </a>
+            </Heading>
+            <p>
+              <time datetime="2026-10-30T19:00">
+                Freitag, 30. Oktober, 19 Uhr
+              </time>
+            </p>
+            <p>Fünf Kilometer durch die Stadt, danach Musik. Drück mich.</p>
+          </article>
+        </li>
+      </ul>
+    </Prose>
+  </Section>
+
   <Section surface="cream" aria-labelledby="festival">
     <Prose>
       <Heading level={2} id="festival">
@@ -142,6 +287,10 @@ const slots = [
         {tagNames.map((color) => (
           <li>
             <Tag color={color}>{color}</Tag>
+            <p>
+              <code>{hex.get(`tag-${color}`)}</code> · Kontrast mit ink:{" "}
+              {withInk(`tag-${color}`)}
+            </p>
           </li>
         ))}
       </ul>
@@ -191,8 +340,149 @@ const slots = [
     margin: var(--space-4) 0 0;
   }
   .tags {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(min(100%, 15rem), 1fr));
+    gap: var(--space-4) var(--space-5);
+  }
+  .tags p {
+    margin: var(--space-2) 0 0;
+  }
+
+  .grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(min(100%, 15rem), 1fr));
+    gap: var(--space-6) var(--space-5);
+  }
+  .label {
+    display: block;
+    font-family: var(--font-text);
+    font-size: var(--step--1);
+    color: var(--muted);
+  }
+
+  .swatch {
+    background: var(--white);
+    border: var(--border) solid var(--line);
+    box-shadow: var(--shadow-sm) var(--line);
+    padding: var(--space-4);
+  }
+  .swatch > * {
+    margin: 0;
+  }
+  .swatch > * + * {
+    margin-top: var(--space-2);
+  }
+  .swatch > .chip + * {
+    margin-top: var(--space-3);
+  }
+  .chip {
+    height: 5rem;
+    border: var(--border-thin) solid var(--line);
+  }
+  .pair {
+    font-weight: 700;
+  }
+
+  .box {
+    background: var(--white);
+    border: var(--border) solid var(--line);
+    padding: var(--space-5) var(--space-4);
+  }
+  .box.thin {
+    border: var(--border-thin) solid var(--line);
+  }
+  .box.pill {
+    border-radius: var(--radius-tag);
+    text-align: center;
+  }
+
+  .font-sample {
+    font-size: var(--step-2);
+    line-height: 1.25;
+  }
+  .font-sample.display {
+    font-family: var(--font-display);
+    font-weight: 800;
+  }
+
+  .stack {
+    display: grid;
+    gap: var(--space-4);
+  }
+  .step {
+    font-family: var(--font-display);
+    font-weight: 800;
+    line-height: 1.1;
+  }
+  .space {
     display: flex;
-    flex-wrap: wrap;
-    gap: var(--space-2) var(--space-3);
+    align-items: center;
+    gap: var(--space-4);
+  }
+  .space code {
+    min-width: 7rem;
+  }
+  .bar {
+    height: var(--space-5);
+    background: var(--orange);
+    border: var(--border-thin) solid var(--line);
+  }
+
+  /* The sticker-card prototype, kept as the reference for its change. Not .card, which is Card's. */
+  .stickers {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(min(100%, 20rem), 1fr));
+    padding: var(--space-4);
+  }
+  .sticker {
+    position: relative;
+    background: var(--pink);
+    border: var(--border) solid var(--line);
+    box-shadow: var(--shadow) var(--line);
+    padding: var(--space-5);
+    transform: rotate(var(--rot));
+    transition: transform var(--dur) var(--ease-spring);
+  }
+  .sticker > * {
+    margin: 0;
+  }
+  .sticker > * + * {
+    margin-top: var(--space-3);
+  }
+  .sticker-link {
+    color: inherit;
+    text-decoration: none;
+  }
+  /* One link per card, stretched over the whole card. */
+  .sticker-link::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+  }
+  .sticker-link:focus-visible {
+    outline: none;
+  }
+  .sticker:has(.sticker-link:focus-visible) {
+    outline: 3px dotted var(--focus);
+    outline-offset: 3px;
+  }
+  .sticker:hover {
+    transform: translate(-2px, -2px) rotate(var(--rot));
+    box-shadow: 10px 10px 0 var(--line);
+  }
+  .sticker:active {
+    transform: translate(8px, 8px) rotate(var(--rot));
+    box-shadow: none;
+    transition-duration: var(--dur-fast);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    /* Keep the shadow change, drop the movement. */
+    .sticker,
+    .sticker:hover,
+    .sticker:active {
+      transform: rotate(var(--rot));
+      transition: none;
+    }
   }
 </style>
