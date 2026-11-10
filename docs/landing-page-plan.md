@@ -115,7 +115,7 @@ Every later change builds its component and replaces the matching bare HTML on `
 | [x]  | 6   | `cluster`               | A wrapping row for buttons, tags and short items such as the past dates                               | the past dates in section 4               | 2     |
 | [x]  | 7   | `when`                  | `<time datetime>` with German date formatting                                                         | the written-out dates in sections 2 and 4 | 2     |
 | [x]  | 8   | `sticker-card`          | `Card` gets a tilt (`tilt`) and one heading link stretched over the card                              | the bare cards in sections 2 and 5        | 2     |
-| [ ]  | 9   | `card-grid`             | A `<ul>` of cards whose neighbors tilt in opposite directions                                         | the card lists in sections 2 and 5        | 8     |
+| [x]  | 9   | `card-grid`             | A `<ul>` of cards whose neighbors tilt in opposite directions                                         | the card lists in sections 2 and 5        | 8     |
 | [ ]  | 10  | `person-card`           | A team card, with a placeholder until the photo arrives                                               | the person cards in section 5             | 8     |
 | [ ]  | 11  | `events-collection`     | Content collection and schema for Run & Rave and festival dates                                       | the hardcoded dates in sections 2 and 4   | 7     |
 | [ ]  | 12  | `event-card`            | A sticker card built from an event entry, with an upcoming and a Winterpause state                    | the event cards in section 2              | 8, 11 |
