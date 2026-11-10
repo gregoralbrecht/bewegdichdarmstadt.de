@@ -1,5 +1,6 @@
 ---
 import { Button } from "../components/Button/Button";
+import { CtaBand } from "../components/CtaBand/CtaBand";
 import { Heading } from "../components/Heading/Heading";
 import { Hero } from "../components/Hero/Hero";
 import { Lead } from "../components/Lead/Lead";
@@ -130,18 +131,11 @@ import Base from "../layouts/Base.astro";
     </Prose>
   </Section>
 
-  <Section surface="pink" aria-labelledby="spenden">
-    <Prose>
-      <Heading level={2} id="spenden">
-        Kostenlos für alle.
-      </Heading>
-      <p>Spenden helfen, die laufenden Kosten zu decken.</p>
-      <p class="actions">
-        <Button href="#spenden">Jetzt spenden</Button>
-      </p>
-      <p>Platzhalter: PayPal-Link folgt</p>
-    </Prose>
-  </Section>
+  <CtaBand id="spenden" title="Kostenlos für alle." href="#spenden">
+    <p>Spenden helfen, die laufenden Kosten zu decken.</p>
+    <p>Platzhalter: PayPal-Link folgt</p>
+    <Fragment slot="action">Jetzt spenden</Fragment>
+  </CtaBand>
 </Base>
 
 <style>

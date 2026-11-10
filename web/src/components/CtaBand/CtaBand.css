@@ -1,0 +1,4 @@
+/* Room for the button's hard shadow, like .hero__action. */
+.cta-band__action {
+  padding-block: var(--space-2) var(--space-4);
+}
